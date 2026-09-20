@@ -185,7 +185,12 @@ function snoozeKeyboard(hash) {
 }
 
 function historyKeyboard(dexNumber) {
-  return { inline_keyboard: [[{ text: "📜 Ver distribuciones anteriores", callback_data: `hi:${dexNumber}` }]] };
+  return {
+    inline_keyboard: [
+      [{ text: "📜 Ver distribuciones anteriores", callback_data: `hi:${dexNumber}` }],
+      [{ text: "✖️ Cancelar", callback_data: `cn:${dexNumber}` }],
+    ],
+  };
 }
 
 // --- Refresco de datos + detección de novedades ---
@@ -562,6 +567,11 @@ async function handleCallbackQuery(env, callbackQuery) {
     const dexNumber = Number(rest[0]);
     await answerCallbackQuery(env, callbackQuery.id);
     await handleHistoryCallback(env, chatId, messageId, dexNumber);
+    return;
+  }
+  if (action === "cn") {
+    await answerCallbackQuery(env, callbackQuery.id);
+    await editMessageReplyMarkup(env, chatId, messageId, null);
     return;
   }
 
