@@ -234,6 +234,25 @@ async function main() {
           .replace(/\s+/g, " ")
           .slice(0, 300)}`
       );
+      // Diagnóstico extra: ¿hay AÑOS en el HTML crudo en absoluto (fuera del
+      // segmentado por bloques td/p/li/tr)? Y ¿cuántas tablas/celdas trae la
+      // página? Esto nos dice si el problema es "no llega la sección de
+      // eventos" o "sí llega pero el segmentado en bloques no la encuentra".
+      const yearMatch = html.match(/\b(19|20)\d{2}\b/);
+      const tableTagCounts = {
+        table: (html.match(/<table/gi) || []).length,
+        tr: (html.match(/<tr/gi) || []).length,
+        td: (html.match(/<td/gi) || []).length,
+        b_strong: (html.match(/<(b|strong)[ >]/gi) || []).length,
+      };
+      console.log(`[debug] ${page.url}: recuento de tags -> ${JSON.stringify(tableTagCounts)}`);
+      if (yearMatch) {
+        const idx = yearMatch.index;
+        const context = html.slice(Math.max(0, idx - 150), idx + 150).replace(/\s+/g, " ");
+        console.log(`[debug] ${page.url}: primer año "${yearMatch[0]}" encontrado en byte ${idx}. Contexto:\n${context}`);
+      } else {
+        console.log(`[debug] ${page.url}: NINGÚN año (19xx/20xx) encontrado en todo el HTML crudo.`);
+      }
       const events = parseEventsFromHtml(html, { ...page, sourceUrl: page.url, speciesNames, debug: true });
       all.push(...events);
       console.log(`OK  ${page.game}: ${events.length} eventos`);
