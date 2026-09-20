@@ -238,7 +238,6 @@ async function main() {
       // segmentado por bloques td/p/li/tr)? Y ¿cuántas tablas/celdas trae la
       // página? Esto nos dice si el problema es "no llega la sección de
       // eventos" o "sí llega pero el segmentado en bloques no la encuentra".
-      const yearMatch = html.match(/\b(19|20)\d{2}\b/);
       const tableTagCounts = {
         table: (html.match(/<table/gi) || []).length,
         tr: (html.match(/<tr/gi) || []).length,
@@ -246,13 +245,21 @@ async function main() {
         b_strong: (html.match(/<(b|strong)[ >]/gi) || []).length,
       };
       console.log(`[debug] ${page.url}: recuento de tags -> ${JSON.stringify(tableTagCounts)}`);
-      if (yearMatch) {
-        const idx = yearMatch.index;
-        const context = html.slice(Math.max(0, idx - 150), idx + 150).replace(/\s+/g, " ");
-        console.log(`[debug] ${page.url}: primer año "${yearMatch[0]}" encontrado en byte ${idx}. Contexto:\n${context}`);
+
+      // El primer año que aparece en TODO el documento suele ser del menú de
+      // navegación (rutas de imágenes tipo /hidden/2019-04/burger.svg), no
+      // del contenido real. Nos interesa qué hay DENTRO de la <table>
+      // principal, así que volcamos un trozo justo después de su apertura.
+      const tableStart = html.search(/<table/i);
+      if (tableStart >= 0) {
+        const chunk = html.slice(tableStart, tableStart + 2500).replace(/\s+/g, " ");
+        console.log(`[debug] ${page.url}: primeros ~2500 caracteres DENTRO de <table> (byte ${tableStart}):\n${chunk}`);
       } else {
-        console.log(`[debug] ${page.url}: NINGÚN año (19xx/20xx) encontrado en todo el HTML crudo.`);
+        console.log(`[debug] ${page.url}: no se encontró ninguna etiqueta <table> en el HTML.`);
       }
+
+      const yearMatches = [...html.matchAll(/\b(19|20)\d{2}\b/g)];
+      console.log(`[debug] ${page.url}: total de coincidencias de año (19xx/20xx) en todo el documento: ${yearMatches.length}`);
       const events = parseEventsFromHtml(html, { ...page, sourceUrl: page.url, speciesNames, debug: true });
       all.push(...events);
       console.log(`OK  ${page.game}: ${events.length} eventos`);
