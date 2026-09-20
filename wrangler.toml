@@ -10,8 +10,8 @@ crons = ["0 6 * * 1"]
 # Variables no secretas. Cambia GITHUB_DATA_URL y GITHUB_GALLERY_URL por
 # las URLs "raw" de tu propio repo en GitHub una vez lo hayas subido.
 [vars]
-GITHUB_DATA_URL = "https://raw.githubusercontent.com/TU_USUARIO/TU_REPO/main/data/distributions.json"
-GITHUB_GALLERY_URL = "https://raw.githubusercontent.com/TU_USUARIO/TU_REPO/main/data/eventsgallery.json"
+GITHUB_DATA_URL = "https://raw.githubusercontent.com/afsenovilla/pokemon-distro-bot/main/data/distributions.json"
+GITHUB_GALLERY_URL = "https://raw.githubusercontent.com/afsenovilla/pokemon-distro-bot/main/data/eventsgallery.json"
 BOT_NAME = "Pokémon Distribuciones Bot"
 
 # Repo público de Poketracker a cruzar en /faltan ("usuario/repo"). Déjalo
