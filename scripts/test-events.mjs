@@ -9,22 +9,39 @@ const speciesNames = JSON.parse(
   await readFile(path.join(__dirname, "resources", "species-names.json"), "utf8")
 );
 
-// HTML de muestra que imita la estructura descrita de las páginas de
-// eventos de Serebii (título en negrita + "Global: <fechas>. <descripción>").
+// HTML calcado (recortado) del HTML real de Serebii, confirmado en producción
+// vía logging de diagnóstico: el título vive en un <h2> dentro de
+// td.fooleft, en una fila de tabla separada de la fila con
+// td.foocontent (fechas + descripción). Todo dentro de <table class="tab">.
 const SAMPLE_HTML = `
-<table>
-<tr><td>
-  <b>Finale</b><br>
-  Global: November 1st 2022 - End of Service. The final event and the now
-  standard Wild Area News had the majority of the Gigantamax Pokémon as
-  opponents to face, including Shiny Snorlax.
-</td></tr>
-<tr><td>
-  <b>Challenge Glastrier &amp; Spectrier Event</b><br>
-  Global: October 21st - October 23rd 2022. The October special Max Raid
-  Battle event celebrated the second anniversary of The Crown Tundra and
-  featured uncatchable battles against Glastrier and Spectrier.
-</td></tr>
+<table class="tab" align="center">
+<tr>
+  <td class="fooleft" colspan="2"><h2>Finale</h2></td>
+</tr>
+<tr>
+  <td class="foocontent" valign="top">
+    <b>Release Dates</b>:<br /><br />
+    <b>Global:</b> November 1st 2022 - End of Service<br />
+    <p>The final event and the now standard Wild Area News had the majority
+    of the Gigantamax Pokémon as opponents to face, including Shiny
+    Snorlax.</p>
+    <p><a href="/swordshield/maxraidbattles/eventden-finale.shtml"><u>Click here for full details</u></a></p>
+  </td>
+  <td class="picturetd" width="300" valign="top"><img src="raidfinale.jpg" alt="Crown Tundra Event" /></td>
+</tr>
+<tr>
+  <td class="fooleft" colspan="2"><h2>Challenge Glastrier &amp; Spectrier Event</h2></td>
+</tr>
+<tr>
+  <td class="foocontent" valign="top">
+    <b>Release Dates</b>:<br /><br />
+    <b>Global:</b> October 21st - October 23rd 2022<br />
+    <p>The October special Max Raid Battle event celebrated the second
+    anniversary of The Crown Tundra and featured uncatchable battles
+    against Glastrier and Spectrier.</p>
+  </td>
+  <td class="picturetd" width="300" valign="top"><img src="glastrier.jpg" /></td>
+</tr>
 </table>
 `;
 
@@ -54,7 +71,65 @@ assert.ok(glastrier.dexNumbers.includes(896)); // Glastrier
 assert.ok(glastrier.dexNumbers.includes(897)); // Spectrier
 assert.equal(glastrier.shiny, "desconocido"); // no menciona "shiny"
 
-// Bloques sin fecha reconocible o demasiado cortos se ignoran, no rompen el parseo.
+// Otra página real (Tera Raid Battles de Escarlata/Púrpura): mismo patrón,
+// dos eventos consecutivos, para confirmar que "currentTitle" se actualiza
+// correctamente evento a evento y no se arrastra el título del anterior.
+const SV_SAMPLE_HTML = `
+<table class="tab" align="center">
+<tr>
+  <td class="fooleft" colspan="2"><h2>Mighty Kingambit</h2></td>
+</tr>
+<tr>
+  <td class="foocontent" valign="top">
+    <b>Release Dates</b>:<br /><br />
+    <b>Global:</b> August 28th 2026 - September 3rd 2026<br /><br />
+    <p>The ninety-second Tera Raid Battle event offers a challenge against a
+    7 Star Raid Boss. This Raid Boss is Shiny Kingambit.</p>
+  </td>
+  <td class="picturetd" width="300" valign="top"><img src="toughraids.jpg" /></td>
+</tr>
+<tr>
+  <td class="fooleft" colspan="2"><h2>Mighty Farigiraf</h2></td>
+</tr>
+<tr>
+  <td class="foocontent" valign="top">
+    <b>Release Dates</b>:<br /><br />
+    <b>Global:</b> August 21st 2026 - August 27th 2026<br /><br />
+    <p>The ninety-first Tera Raid Battle event offers a challenge against a
+    7 Star Raid Boss.</p>
+  </td>
+  <td class="picturetd" width="300" valign="top"><img src="toughraids.jpg" /></td>
+</tr>
+</table>
+`;
+const svEvents = parseEventsFromHtml(SV_SAMPLE_HTML, {
+  game: "Escarlata/Púrpura",
+  generation: 9,
+  sourceUrl: "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml",
+  speciesNames,
+});
+assert.equal(svEvents.length, 2);
+const kingambit = svEvents.find((e) => e.title === "Mighty Kingambit");
+assert.ok(kingambit, "debería encontrar 'Mighty Kingambit'");
+assert.equal(kingambit.dateStart, "2026-08-28");
+assert.equal(kingambit.dateEnd, "2026-09-03");
+assert.equal(kingambit.shiny, "possible");
+assert.ok(kingambit.dexNumbers.includes(983)); // Kingambit
+
+const farigiraf = svEvents.find((e) => e.title === "Mighty Farigiraf");
+assert.ok(farigiraf, "debería encontrar 'Mighty Farigiraf' con su propio título, no el de Kingambit");
+assert.equal(farigiraf.dateStart, "2026-08-21");
+assert.equal(farigiraf.dateEnd, "2026-08-27");
+
+// Un td.foocontent sin ningún <h2> previo (título ausente) se ignora sin
+// romper el parseo.
+const noTitleEvents = parseEventsFromHtml(
+  `<table class="tab"><tr><td class="foocontent">Global: March 1st 2024. Sin título previo.</td></tr></table>`,
+  { game: "Test", generation: 8, sourceUrl: "https://example.com", speciesNames }
+);
+assert.equal(noTitleEvents.length, 0);
+
+// Sin tabla "table.tab" en absoluto: no debe encontrar nada ni petar.
 const emptyEvents = parseEventsFromHtml("<p>Texto sin ninguna fecha aquí.</p>", {
   game: "Test",
   generation: 8,

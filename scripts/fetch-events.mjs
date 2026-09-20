@@ -122,91 +122,84 @@ function looksShiny(text) {
   return /\bshiny\b/i.test(text) ? "possible" : "desconocido";
 }
 
-/** Prueba varios "tamaños" de bloque candidato, de más específico a más
- * amplio, porque no sabemos de antemano si la página tiene el título y la
- * fecha en la misma celda, o repartidos en columnas distintas de una misma
- * fila de tabla. Cada selector se filtra a sus propias "hojas" (sin anidar
- * el mismo tipo dentro) para no duplicar contenido. */
-const BLOCK_SELECTORS = ["td, p, li", "tr"];
-
-function extractCandidateBlocks($, selector) {
-  const blocks = [];
-  $(selector).each((_, el) => {
-    const $el = $(el);
-    if ($el.find(selector).length > 0) return; // no es una hoja para este selector
-    const text = $el.text().replace(/\s+/g, " ").trim();
-    if (text.length < 20) return;
-    blocks.push({ el: $el, text });
-  });
-  return blocks;
-}
-
-/** Parser puro (sin red): toma HTML ya descargado y devuelve los eventos
- * encontrados. Exportado para poder testearlo con HTML de muestra.
- *
- * No hemos podido validar esto contra el HTML real de Serebii (bloqueado
- * desde el entorno donde se escribió), así que prueba dos estrategias de
- * segmentación distintas por si acaso el título y la fecha no están en el
- * mismo elemento. Si aun así no encuentra nada, escribe un resumen de
- * diagnóstico a stderr con `debug: true` para poder ver por qué. */
+/** Estructura real confirmada en Serebii (comprobada con HTML en vivo, no
+ * adivinada): cada evento vive en una tabla `table.tab` como dos filas
+ * separadas —
+ *   <tr><td class="fooleft" colspan="2"><h2>Título</h2></td></tr>
+ *   <tr><td class="foocontent">...<b>Global:</b> fechas...</td><td class="picturetd">...</td></tr>
+ * — así que el título (h2) y la fecha/descripción (td.foocontent) NO están
+ * en el mismo bloque. Recorremos ambos selectores en orden de aparición en
+ * el documento y recordamos el último `<h2>` visto como título del
+ * `.foocontent` que le sigue. */
 export function parseEventsFromHtml(html, { game, generation, sourceUrl, speciesNames, debug = false } = {}) {
   const $ = load(html);
   const speciesEntries = Object.entries(speciesNames.en).sort((a, b) => b[1].length - a[1].length);
   const seen = new Map();
-  const rejected = []; // para diagnóstico: bloques con año pero sin fecha válida
+  const rejected = []; // para diagnóstico: bloques con título pero sin fecha válida
+  let sawAnyContentBlock = false;
 
-  for (const selector of BLOCK_SELECTORS) {
-    for (const { el: $block, text } of extractCandidateBlocks($, selector)) {
-      if (!/\d{4}/.test(text)) continue; // sin año no hay fecha fiable
+  let currentTitle = null;
+  $("table.tab h2, table.tab td.foocontent").each((_, el) => {
+    const $el = $(el);
+    const tagName = (el.tagName || el.name || "").toLowerCase();
 
-      const title = $block.find("b, strong").first().text().replace(/\s+/g, " ").trim();
-      // Exigimos una negrita real como título: si no la hay, es más probable
-      // que sea un fragmento de fila (p. ej. la celda de fecha sin el
-      // título) que un evento de verdad, y preferimos perdérnoslo antes que
-      // inventar un título cortando el texto a lo bruto.
-      if (!title || title.length < 3 || title.length > 100) continue;
-      if (/^(global|release dates?)[:.]?$/i.test(title)) continue;
-
-      const { dateStart, dateEnd, dateRaw } = extractDateRange(text);
-      if (!dateStart) {
-        if (rejected.length < 5) rejected.push(text.slice(0, 150));
-        continue;
-      }
-
-      const dexNumbers = findDexNumbers(text, speciesEntries);
-      const shiny = looksShiny(text);
-
-      const id = slugifyId(`${game}-${title}-${dateStart}`);
-      if (seen.has(id)) continue; // duplicado (misma info vista por otro selector, o tabla anidada)
-
-      const pokemonLabel =
-        dexNumbers.length > 0
-          ? dexNumbers
-              .slice(0, 6)
-              .map((d) => speciesNames.es[String(d)] || speciesNames.en[String(d)])
-              .join(", ") + (dexNumbers.length > 6 ? ` y ${dexNumbers.length - 6} más` : "")
-          : null;
-
-      seen.set(id, {
-        id,
-        game,
-        generation,
-        title,
-        dateStart,
-        dateEnd,
-        dateRaw,
-        dexNumbers,
-        pokemonLabel,
-        shiny,
-        sourceUrl,
-      });
+    if (tagName === "h2") {
+      const t = $el.text().replace(/\s+/g, " ").trim();
+      if (t) currentTitle = t;
+      return;
     }
-  }
+
+    // td.foocontent: aquí viven las fechas y la descripción del evento.
+    sawAnyContentBlock = true;
+    const text = $el.text().replace(/\s+/g, " ").trim();
+    if (text.length < 10) return;
+
+    const title = currentTitle;
+    if (!title || title.length < 2 || title.length > 100) return;
+
+    const { dateStart, dateEnd, dateRaw } = extractDateRange(text);
+    if (!dateStart) {
+      if (rejected.length < 5) rejected.push(`[${title}] ${text.slice(0, 150)}`);
+      return;
+    }
+
+    const dexNumbers = findDexNumbers(text, speciesEntries);
+    const shiny = looksShiny(text);
+
+    const id = slugifyId(`${game}-${title}-${dateStart}`);
+    if (seen.has(id)) return; // duplicado
+
+    const pokemonLabel =
+      dexNumbers.length > 0
+        ? dexNumbers
+            .slice(0, 6)
+            .map((d) => speciesNames.es[String(d)] || speciesNames.en[String(d)])
+            .join(", ") + (dexNumbers.length > 6 ? ` y ${dexNumbers.length - 6} más` : "")
+        : null;
+
+    seen.set(id, {
+      id,
+      game,
+      generation,
+      title,
+      dateStart,
+      dateEnd,
+      dateRaw,
+      dexNumbers,
+      pokemonLabel,
+      shiny,
+      sourceUrl,
+    });
+  });
 
   if (debug && seen.size === 0) {
-    console.error(`[debug] ${sourceUrl}: 0 eventos. Bloques con año pero sin rango de fecha reconocido:`);
-    for (const r of rejected) console.error(`  - ${r}`);
-    if (rejected.length === 0) console.error("  (ningún bloque con año encontrado en absoluto: puede que ni siquiera esté llegando el HTML esperado)");
+    console.error(`[debug] ${sourceUrl}: 0 eventos.`);
+    if (!sawAnyContentBlock) {
+      console.error("  (ni un solo table.tab td.foocontent encontrado: puede que Serebii haya cambiado la maquetación, o que no llegue el HTML esperado)");
+    } else if (rejected.length > 0) {
+      console.error("  Bloques con título pero sin rango de fecha reconocido:");
+      for (const r of rejected) console.error(`  - ${r}`);
+    }
   }
 
   return [...seen.values()];
@@ -229,37 +222,6 @@ async function main() {
   for (const page of SOURCE_PAGES) {
     try {
       const html = await fetchHtml(page.url);
-      console.log(
-        `[debug] ${page.url}: ${html.length} bytes recibidos. Primeros 300 caracteres:\n${html
-          .replace(/\s+/g, " ")
-          .slice(0, 300)}`
-      );
-      // Diagnóstico extra: ¿hay AÑOS en el HTML crudo en absoluto (fuera del
-      // segmentado por bloques td/p/li/tr)? Y ¿cuántas tablas/celdas trae la
-      // página? Esto nos dice si el problema es "no llega la sección de
-      // eventos" o "sí llega pero el segmentado en bloques no la encuentra".
-      const tableTagCounts = {
-        table: (html.match(/<table/gi) || []).length,
-        tr: (html.match(/<tr/gi) || []).length,
-        td: (html.match(/<td/gi) || []).length,
-        b_strong: (html.match(/<(b|strong)[ >]/gi) || []).length,
-      };
-      console.log(`[debug] ${page.url}: recuento de tags -> ${JSON.stringify(tableTagCounts)}`);
-
-      // El primer año que aparece en TODO el documento suele ser del menú de
-      // navegación (rutas de imágenes tipo /hidden/2019-04/burger.svg), no
-      // del contenido real. Nos interesa qué hay DENTRO de la <table>
-      // principal, así que volcamos un trozo justo después de su apertura.
-      const tableStart = html.search(/<table/i);
-      if (tableStart >= 0) {
-        const chunk = html.slice(tableStart, tableStart + 2500).replace(/\s+/g, " ");
-        console.log(`[debug] ${page.url}: primeros ~2500 caracteres DENTRO de <table> (byte ${tableStart}):\n${chunk}`);
-      } else {
-        console.log(`[debug] ${page.url}: no se encontró ninguna etiqueta <table> en el HTML.`);
-      }
-
-      const yearMatches = [...html.matchAll(/\b(19|20)\d{2}\b/g)];
-      console.log(`[debug] ${page.url}: total de coincidencias de año (19xx/20xx) en todo el documento: ${yearMatches.length}`);
       const events = parseEventsFromHtml(html, { ...page, sourceUrl: page.url, speciesNames, debug: true });
       all.push(...events);
       console.log(`OK  ${page.game}: ${events.length} eventos`);
