@@ -15,6 +15,7 @@ import {
   formatEventEntry,
   findActiveDistributionsForDex,
   findActiveEventsForDex,
+  groupByGame,
 } from "../src/lib.js";
 
 assert.equal(normalize("Mewtwó"), "mewtwo");
@@ -148,6 +149,22 @@ const eventEntries = [
 ];
 assert.equal(findActiveEventsForDex(eventEntries, 143, "2024-01-05").length, 1);
 assert.equal(findActiveEventsForDex(eventEntries, 999, "2024-01-05").length, 0);
+
+// --- groupByGame (/eventosactivos, /eventosproximos divididos por juego) ---
+const gameEntries = [
+  { id: "a", game: "Escarlata/Púrpura", generation: 9 },
+  { id: "b", game: "Espada/Escudo", generation: 8 },
+  { id: "c", game: "Escarlata/Púrpura", generation: 9 },
+];
+const gameGroups = groupByGame(gameEntries);
+assert.equal(gameGroups.length, 2);
+assert.equal(gameGroups[0].label, "Escarlata/Púrpura"); // generación más reciente primero
+assert.deepEqual(gameGroups[0].entries.map((e) => e.id), ["a", "c"]); // mantiene el orden original dentro del grupo
+assert.equal(gameGroups[1].label, "Espada/Escudo");
+
+const eventTextNoGame = formatEventEntry(eventEntry, { showGame: false });
+assert.ok(!eventTextNoGame.includes("Espada/Escudo"));
+assert.ok(eventTextNoGame.includes("Finale"));
 
 // --- shortHash ---
 assert.equal(shortHash("mew-gen4-hgss-always").length, 8);
