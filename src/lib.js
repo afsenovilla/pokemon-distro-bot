@@ -265,7 +265,7 @@ export function formatEventEntry(entry, { showTitle = true } = {}) {
   const status = computeStatus(entry, new Date().toISOString().slice(0, 10));
   const lines = [];
   if (showTitle) {
-    lines.push(`<b>${escapeHtml(entry.title)}</b> — ${escapeHtml(entry.game || "Juego no especificado")}`);
+    lines.push(`<b>${escapeHtml(entry.titleEs || entry.title)}</b> — ${escapeHtml(entry.game || "Juego no especificado")}`);
   }
   lines.push(`📅 ${dateRange(entry)} · ${statusLabel(status)}`);
   if (entry.pokemonLabel) lines.push(`🎯 ${escapeHtml(entry.pokemonLabel)}`);
