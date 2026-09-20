@@ -39,7 +39,8 @@ function buildHelpText(env, chatId) {
   const owner = env.OWNER_CHAT_ID;
   const isOwner = !owner || String(chatId) === String(owner);
   const faltanLine = isOwner
-    ? "\n• /faltan — cruce con la Living Dex de Poketracker: qué se queda atrapado si no se mueve a HOME a tiempo, y qué shiny garantizados faltan por conseguir"
+    ? "\n• /faltan — cruce con la Living Dex de Poketracker: qué se queda atrapado si no se mueve a HOME a tiempo, y qué shiny garantizados faltan por conseguir" +
+      "\n• /refresh — recarga ahora mismo los datos desde GitHub, sin esperar al cron semanal"
     : "";
   return `<b>Pokémon Distribuciones Bot</b>
 Distribuciones (Mystery Gift) y eventos in-game (raids, etc. — no Pokémon GO) de todos los juegos principales de Pokémon.
@@ -471,6 +472,28 @@ Busca un Pokémon (p. ej. <code>mew</code>) y cada distribución te dirá su cas
   await sendMessage(env, chatId, text);
 }
 
+/** Fuerza una recarga inmediata de los 3 datasets desde GitHub (lo mismo
+ * que hace el cron semanal), para no depender de esperar al cron ni de
+ * llamar a /refresh por HTTP con curl/consola — solo tú puedes usarlo. */
+async function handleRefresh(env, chatId) {
+  const owner = env.OWNER_CHAT_ID;
+  if (owner && String(chatId) !== String(owner)) {
+    await sendMessage(env, chatId, "Este comando no está disponible.");
+    return;
+  }
+  await sendMessage(env, chatId, "Recargando datos desde GitHub…");
+  try {
+    const results = await refreshData(env);
+    const lines = ["Hecho. Entradas cargadas ahora mismo:"];
+    lines.push(`• Distribuciones: ${results.status ?? "error al descargar"}`);
+    lines.push(`• Galería (histórico): ${results.gallery ?? "error al descargar"}`);
+    lines.push(`• Eventos in-game: ${results.events ?? "error al descargar"}`);
+    await sendMessage(env, chatId, lines.join("\n"));
+  } catch (err) {
+    await sendMessage(env, chatId, `Ha fallado la recarga: ${err.message}`);
+  }
+}
+
 async function handleFaltan(env, chatId) {
   const owner = env.OWNER_CHAT_ID;
   if (owner && String(chatId) !== String(owner)) {
@@ -681,6 +704,9 @@ async function handleUpdate(env, update) {
         return;
       case "faltan":
         await handleFaltan(env, chatId);
+        return;
+      case "refresh":
+        await handleRefresh(env, chatId);
         return;
       case "pokemon":
       case "pokémon":
