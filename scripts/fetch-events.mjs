@@ -122,60 +122,92 @@ function looksShiny(text) {
   return /\bshiny\b/i.test(text) ? "possible" : "desconocido";
 }
 
+/** Prueba varios "tamaños" de bloque candidato, de más específico a más
+ * amplio, porque no sabemos de antemano si la página tiene el título y la
+ * fecha en la misma celda, o repartidos en columnas distintas de una misma
+ * fila de tabla. Cada selector se filtra a sus propias "hojas" (sin anidar
+ * el mismo tipo dentro) para no duplicar contenido. */
+const BLOCK_SELECTORS = ["td, p, li", "tr"];
+
+function extractCandidateBlocks($, selector) {
+  const blocks = [];
+  $(selector).each((_, el) => {
+    const $el = $(el);
+    if ($el.find(selector).length > 0) return; // no es una hoja para este selector
+    const text = $el.text().replace(/\s+/g, " ").trim();
+    if (text.length < 20) return;
+    blocks.push({ el: $el, text });
+  });
+  return blocks;
+}
+
 /** Parser puro (sin red): toma HTML ya descargado y devuelve los eventos
- * encontrados. Exportado para poder testearlo con HTML de muestra. */
-export function parseEventsFromHtml(html, { game, generation, sourceUrl, speciesNames }) {
+ * encontrados. Exportado para poder testearlo con HTML de muestra.
+ *
+ * No hemos podido validar esto contra el HTML real de Serebii (bloqueado
+ * desde el entorno donde se escribió), así que prueba dos estrategias de
+ * segmentación distintas por si acaso el título y la fecha no están en el
+ * mismo elemento. Si aun así no encuentra nada, escribe un resumen de
+ * diagnóstico a stderr con `debug: true` para poder ver por qué. */
+export function parseEventsFromHtml(html, { game, generation, sourceUrl, speciesNames, debug = false } = {}) {
   const $ = load(html);
   const speciesEntries = Object.entries(speciesNames.en).sort((a, b) => b[1].length - a[1].length);
   const seen = new Map();
+  const rejected = []; // para diagnóstico: bloques con año pero sin fecha válida
 
-  $("td, p, li").each((_, block) => {
-    const $block = $(block);
-    // Nos quedamos solo con los bloques "hoja" respecto a este selector,
-    // para no procesar el mismo evento dos veces por culpa de tablas
-    // anidadas (un <td> que contiene otro <td> con el mismo texto).
-    if ($block.find("td, p, li").length > 0) return;
+  for (const selector of BLOCK_SELECTORS) {
+    for (const { el: $block, text } of extractCandidateBlocks($, selector)) {
+      if (!/\d{4}/.test(text)) continue; // sin año no hay fecha fiable
 
-    const text = $block.text().replace(/\s+/g, " ").trim();
-    if (text.length < 20) return;
-    if (!/\d{4}/.test(text)) return; // sin año no hay fecha fiable
+      const title = $block.find("b, strong").first().text().replace(/\s+/g, " ").trim();
+      // Exigimos una negrita real como título: si no la hay, es más probable
+      // que sea un fragmento de fila (p. ej. la celda de fecha sin el
+      // título) que un evento de verdad, y preferimos perdérnoslo antes que
+      // inventar un título cortando el texto a lo bruto.
+      if (!title || title.length < 3 || title.length > 100) continue;
+      if (/^(global|release dates?)[:.]?$/i.test(title)) continue;
 
-    const boldText = $block.find("b, strong").first().text().replace(/\s+/g, " ").trim();
-    const title = boldText || text.slice(0, 60);
-    if (!title || title.length > 100) return;
-    if (/^(global|release dates?)[:.]?$/i.test(title)) return;
+      const { dateStart, dateEnd, dateRaw } = extractDateRange(text);
+      if (!dateStart) {
+        if (rejected.length < 5) rejected.push(text.slice(0, 150));
+        continue;
+      }
 
-    const { dateStart, dateEnd, dateRaw } = extractDateRange(text);
-    if (!dateStart) return;
+      const dexNumbers = findDexNumbers(text, speciesEntries);
+      const shiny = looksShiny(text);
 
-    const dexNumbers = findDexNumbers(text, speciesEntries);
-    const shiny = looksShiny(text);
+      const id = slugifyId(`${game}-${title}-${dateStart}`);
+      if (seen.has(id)) continue; // duplicado (misma info vista por otro selector, o tabla anidada)
 
-    const id = slugifyId(`${game}-${title}-${dateStart}`);
-    if (seen.has(id)) return; // duplicado (tabla anidada, repetición en la página)
+      const pokemonLabel =
+        dexNumbers.length > 0
+          ? dexNumbers
+              .slice(0, 6)
+              .map((d) => speciesNames.es[String(d)] || speciesNames.en[String(d)])
+              .join(", ") + (dexNumbers.length > 6 ? ` y ${dexNumbers.length - 6} más` : "")
+          : null;
 
-    const pokemonLabel =
-      dexNumbers.length > 0
-        ? dexNumbers
-            .slice(0, 6)
-            .map((d) => speciesNames.es[String(d)] || speciesNames.en[String(d)])
-            .join(", ") + (dexNumbers.length > 6 ? ` y ${dexNumbers.length - 6} más` : "")
-        : null;
+      seen.set(id, {
+        id,
+        game,
+        generation,
+        title,
+        dateStart,
+        dateEnd,
+        dateRaw,
+        dexNumbers,
+        pokemonLabel,
+        shiny,
+        sourceUrl,
+      });
+    }
+  }
 
-    seen.set(id, {
-      id,
-      game,
-      generation,
-      title,
-      dateStart,
-      dateEnd,
-      dateRaw,
-      dexNumbers,
-      pokemonLabel,
-      shiny,
-      sourceUrl,
-    });
-  });
+  if (debug && seen.size === 0) {
+    console.error(`[debug] ${sourceUrl}: 0 eventos. Bloques con año pero sin rango de fecha reconocido:`);
+    for (const r of rejected) console.error(`  - ${r}`);
+    if (rejected.length === 0) console.error("  (ningún bloque con año encontrado en absoluto: puede que ni siquiera esté llegando el HTML esperado)");
+  }
 
   return [...seen.values()];
 }
@@ -197,7 +229,7 @@ async function main() {
   for (const page of SOURCE_PAGES) {
     try {
       const html = await fetchHtml(page.url);
-      const events = parseEventsFromHtml(html, { ...page, sourceUrl: page.url, speciesNames });
+      const events = parseEventsFromHtml(html, { ...page, sourceUrl: page.url, speciesNames, debug: true });
       all.push(...events);
       console.log(`OK  ${page.game}: ${events.length} eventos`);
     } catch (err) {

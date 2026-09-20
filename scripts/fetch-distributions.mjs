@@ -30,8 +30,11 @@ function findDexNumber(speciesName, speciesEntriesSorted) {
 }
 
 const API_BASE = "https://bulbapedia.bulbagarden.net/w/api.php";
+// Wikimedia pide una User-Agent identificable con contacto (WP:UA); algunos
+// rangos de IP "de nube" (como los de GitHub Actions) devuelven 403 de
+// todas formas, sin relación con la UA — de ahí los reintentos.
 const USER_AGENT =
-  "pokemon-distro-bot/1.0 (bot de Telegram de distribuciones Pokémon; uso personal, no comercial)";
+  "pokemon-distro-bot/1.0 (https://github.com/afsenovilla/pokemon-distro-bot; bot de Telegram de distribuciones Pokémon, uso personal no comercial)";
 
 const CURRENT_GEN_PAGES = [
   {
@@ -44,9 +47,15 @@ const CURRENT_GEN_PAGES = [
   },
 ];
 
-async function fetchJson(url) {
-  const res = await fetch(url, { headers: { "User-Agent": USER_AGENT } });
-  if (!res.ok) throw new Error(`HTTP ${res.status} en ${url}`);
+async function fetchJson(url, attempt = 1) {
+  const res = await fetch(url, { headers: { "User-Agent": USER_AGENT, Accept: "application/json" } });
+  if (!res.ok) {
+    if (res.status === 403 && attempt < 3) {
+      await new Promise((r) => setTimeout(r, attempt * 2000));
+      return fetchJson(url, attempt + 1);
+    }
+    throw new Error(`HTTP ${res.status} en ${url}`);
+  }
   return res.json();
 }
 
