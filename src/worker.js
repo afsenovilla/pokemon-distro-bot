@@ -2,7 +2,7 @@ import {
   computeStatus,
   formatStatusEntry,
   formatGalleryEntry,
-  searchGallery,
+  searchGallery, v
   escapeHtml,
   daysUntilBankClosure,
   BANK_CLOSURE_LABEL,
