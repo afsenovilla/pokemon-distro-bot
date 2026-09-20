@@ -1,7 +1,1989 @@
 {
-  "generatedAt": null,
-  "totalEntries": 0,
+  "generatedAt": "2026-09-20T22:07:18.154Z",
+  "generatedToday": "2026-09-20",
+  "totalEntries": 123,
   "errors": [],
-  "entries": [],
-  "_comment": "Este archivo lo genera automáticamente scripts/fetch-events.mjs (vía GitHub Actions, cada semana). Está vacío porque todavía no se ha ejecutado ninguna actualización real; en cuanto se lance el workflow 'Actualizar distribuciones' (manual o por el cron semanal), se rellenará con eventos in-game reales sacados de Serebii.net y este comentario desaparecerá."
+  "entries": [
+    {
+      "id": "escarlata-purpura-mighty-kingambit-2026-08-28",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Kingambit",
+      "dateStart": "2026-08-28",
+      "dateEnd": "2026-09-03",
+      "dateRaw": "Release Dates: Global: August 28th 2026 - September 3rd 2026 The ninety-second Tera Raid Battl",
+      "dexNumbers": [
+        983,
+        624,
+        625
+      ],
+      "pokemonLabel": "Kingambit, Pawniard, Bisharp",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-farigiraf-2026-08-21",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Farigiraf",
+      "dateStart": "2026-08-21",
+      "dateEnd": "2026-08-27",
+      "dateRaw": "Release Dates: Global: August 21st 2026 - August 27th 2026 The ninety-first Tera Raid Battle e",
+      "dexNumbers": [
+        203,
+        981
+      ],
+      "pokemonLabel": "Girafarig, Farigiraf",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-annihilape-2026-08-14",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Annihilape",
+      "dateStart": "2026-08-14",
+      "dateEnd": "2026-08-20",
+      "dateRaw": "Release Dates: Global: August 14th 2026 - August 20th 2026 The ninetieth Tera Raid Battle even",
+      "dexNumbers": [
+        979,
+        57,
+        56
+      ],
+      "pokemonLabel": "Annihilape, Primeape, Mankey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-glimmora-2026-08-07",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Glimmora",
+      "dateStart": "2026-08-07",
+      "dateEnd": "2026-08-13",
+      "dateRaw": "Release Dates: Global: August 7th 2026 - August 13th 2026 The eighty-ninth Tera Raid Battle ev",
+      "dexNumbers": [
+        970,
+        969
+      ],
+      "pokemonLabel": "Glimmora, Glimmet",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-magikarp-2026-07-17",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Magikarp",
+      "dateStart": "2026-07-17",
+      "dateEnd": "2026-08-06",
+      "dateRaw": "Release Dates: Global: July 17th 2026 - August 6th 2026 The eighty-eighth Tera Raid Battle eve",
+      "dexNumbers": [
+        129
+      ],
+      "pokemonLabel": "Magikarp",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-dragapult-2025-12-05",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Dragapult",
+      "dateStart": "2025-12-05",
+      "dateEnd": "2025-12-07",
+      "dateRaw": "Release Dates: Global: December 5th 2025 - December 7th 2025 Global: December 12th 2025 - Dece",
+      "dexNumbers": [
+        887,
+        242
+      ],
+      "pokemonLabel": "Dragapult, Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-goodra-2025-11-21",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Goodra",
+      "dateStart": "2025-11-21",
+      "dateEnd": "2025-11-23",
+      "dateRaw": "Release Dates: Global: November 21st 2025 - November 23rd 2025 Global: November 28th 2025 - No",
+      "dexNumbers": [
+        242,
+        706
+      ],
+      "pokemonLabel": "Blissey, Goodra",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-hydreigon-2025-11-07",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Hydreigon",
+      "dateStart": "2025-11-07",
+      "dateEnd": "2025-11-09",
+      "dateRaw": "Release Dates: Global: November 7th 2025 - November 9th 2025 Global: November 14th 2025 - Nove",
+      "dexNumbers": [
+        635,
+        242
+      ],
+      "pokemonLabel": "Hydreigon, Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-roaring-moon-mighty-iron-valiant-2025-10-03",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Roaring Moon & Mighty Iron Valiant",
+      "dateStart": "2025-10-03",
+      "dateEnd": "2025-10-12",
+      "dateRaw": "Release Dates: Global: October 3rd 2025 - October 12th 2025 The eighty-fourth Tera Raid Battle",
+      "dexNumbers": [
+        986,
+        987,
+        988,
+        989,
+        993,
+        1005,
+        1006,
+        985,
+        990,
+        991,
+        995,
+        984,
+        992,
+        994
+      ],
+      "pokemonLabel": "Furioseta, Melenaleteo, Reptalada, Pelarena, Ferrocuello, Bramaluna y 8 más",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-shiny-chi-yu-2025-09-01",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Shiny Chi-Yu",
+      "dateStart": "2025-09-01",
+      "dateEnd": "2025-09-13",
+      "dateRaw": "Release Dates: Global: September 1st 2025 - September 13th 2025 The eighty-third Tera Raid Bat",
+      "dexNumbers": [
+        1004
+      ],
+      "pokemonLabel": "Chi-Yu",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-shiny-ting-lu-2025-08-18",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Shiny Ting-Lu",
+      "dateStart": "2025-08-18",
+      "dateEnd": "2025-08-31",
+      "dateRaw": "Release Dates: Global: August 18th 2025 - August 31st 2025 The eighty-second Tera Raid Battle",
+      "dexNumbers": [
+        1003
+      ],
+      "pokemonLabel": "Ting-Lu",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-shiny-chien-pao-2025-08-04",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Shiny Chien-Pao",
+      "dateStart": "2025-08-04",
+      "dateEnd": "2025-08-17",
+      "dateRaw": "Release Dates: Global: August 4th 2025 - August 17th 2025 The eighty-first Tera Raid Battle ev",
+      "dexNumbers": [
+        1002
+      ],
+      "pokemonLabel": "Chien-Pao",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-shiny-wo-chien-2025-07-23",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Shiny Wo-Chien",
+      "dateStart": "2025-07-23",
+      "dateEnd": "2025-08-03",
+      "dateRaw": "Release Dates: Global: July 23rd 2025 - August 3rd 2025 The eightieth Tera Raid Battle event o",
+      "dexNumbers": [
+        1001
+      ],
+      "pokemonLabel": "Wo-Chien",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-kommo-o-2025-07-11",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Kommo-o",
+      "dateStart": "2025-07-11",
+      "dateEnd": "2025-07-13",
+      "dateRaw": "Release Dates: Global: July 11th 2025 - July 13th 2025 Global: July 18th 2025 - July 20th 2025",
+      "dexNumbers": [
+        242,
+        784
+      ],
+      "pokemonLabel": "Blissey, Kommo-o",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-baxcalibur-2025-06-20",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Baxcalibur",
+      "dateStart": "2025-06-20",
+      "dateEnd": "2025-06-22",
+      "dateRaw": "Release Dates: Global: June 20th 2025 - June 22nd 2025 Global: June 27th 2025 - June 29th 2025",
+      "dexNumbers": [
+        998,
+        242
+      ],
+      "pokemonLabel": "Baxcalibur, Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-porygon2-2025-06-05",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Porygon2",
+      "dateStart": "2025-06-05",
+      "dateEnd": "2025-06-15",
+      "dateRaw": "Release Dates: Global: June 5th 2025 - June 15th 2025 The seventy-seventh Tera Raid Battle eve",
+      "dexNumbers": [
+        233
+      ],
+      "pokemonLabel": "Porygon2",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-garchomp-2025-05-23",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Garchomp",
+      "dateStart": "2025-05-23",
+      "dateEnd": "2025-05-25",
+      "dateRaw": "Release Dates: Global: May 23rd 2025 - May 25th 2025 Global: May 30th 2025 - June 1st 2025 The",
+      "dexNumbers": [
+        445,
+        242
+      ],
+      "pokemonLabel": "Garchomp, Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-metagross-2025-05-09",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Metagross",
+      "dateStart": "2025-05-09",
+      "dateEnd": "2025-05-11",
+      "dateRaw": "Release Dates: Global: May 9th 2025 - May 11th 2025 Global: May 12th 2025 - May 19th 2025 The",
+      "dexNumbers": [
+        376,
+        242
+      ],
+      "pokemonLabel": "Metagross, Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-salamence-2025-04-18",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Salamence",
+      "dateStart": "2025-04-18",
+      "dateEnd": "2025-04-20",
+      "dateRaw": "Release Dates: Global: April 18th 2025 - April 20th 2025 Global: April 25th 2025 - April 27th",
+      "dexNumbers": [
+        373,
+        242
+      ],
+      "pokemonLabel": "Salamence, Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-tyranitar-2025-03-28",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Tyranitar",
+      "dateStart": "2025-03-28",
+      "dateEnd": "2025-03-30",
+      "dateRaw": "Release Dates: Global: March 28th 2025 - March 30th 2025 Global: April 4th - April 6th 2025 Th",
+      "dexNumbers": [
+        248,
+        242
+      ],
+      "pokemonLabel": "Tyranitar, Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-quaquaval-2025-03-14",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Quaquaval",
+      "dateStart": "2025-03-14",
+      "dateEnd": "2025-03-20",
+      "dateRaw": "Release Dates: Global: March 14th 2025 - March 20th 2025 The seventy-second Tera Raid Battle e",
+      "dexNumbers": [
+        914
+      ],
+      "pokemonLabel": "Quaquaval",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-skeledirge-2025-03-07",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Skeledirge",
+      "dateStart": "2025-03-07",
+      "dateEnd": "2025-03-13",
+      "dateRaw": "Release Dates: Global: March 7th 2025 - March 13th 2025 The seventy-first Tera Raid Battle eve",
+      "dexNumbers": [
+        911
+      ],
+      "pokemonLabel": "Skeledirge",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-meowscarada-2025-02-28",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Meowscarada",
+      "dateStart": "2025-02-28",
+      "dateEnd": "2025-03-06",
+      "dateRaw": "Release Dates: Global: February 28th 2025 - March 6th 2025 The seventieth Tera Raid Battle eve",
+      "dexNumbers": [
+        908
+      ],
+      "pokemonLabel": "Meowscarada",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-shiny-rayquaza-appears-2024-12-20",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Shiny Rayquaza Appears",
+      "dateStart": "2024-12-20",
+      "dateEnd": null,
+      "dateRaw": "Release Dates: Global: December 20th 2024 - Janaury 5th 2025 The sixty-sixth Tera Raid Battle",
+      "dexNumbers": [
+        384
+      ],
+      "pokemonLabel": "Rayquaza",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-raid-worthy-pok-mon-annihilape-kingambit-2024-12-13",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Raid Worthy Pok�mon - Annihilape & Kingambit",
+      "dateStart": "2024-12-13",
+      "dateEnd": "2024-12-19",
+      "dateRaw": "Release Dates: Global: December 13th - December 19th 2024 The sixty-fifth Tera Raid Battle eve",
+      "dexNumbers": [
+        979,
+        983,
+        384
+      ],
+      "pokemonLabel": "Annihilape, Kingambit, Rayquaza",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-raid-worthy-pok-mon-azumarill-clodsire-2024-12-06",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Raid Worthy Pok�mon - Azumarill & Clodsire",
+      "dateStart": "2024-12-06",
+      "dateEnd": "2024-12-12",
+      "dateRaw": "Release Dates: Global: December 6th - December 12th 2024 The sixty-fourth Tera Raid Battle eve",
+      "dexNumbers": [
+        184,
+        384,
+        980
+      ],
+      "pokemonLabel": "Azumarill, Rayquaza, Clodsire",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-raid-worthy-pok-mon-corviknight-bellibolt-2024-11-29",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Raid Worthy Pok�mon - Corviknight & Bellibolt",
+      "dateStart": "2024-11-29",
+      "dateEnd": "2024-12-05",
+      "dateRaw": "Release Dates: Global: November 29th - December 5th 2024 The sixty-third Tera Raid Battle even",
+      "dexNumbers": [
+        823,
+        939,
+        384
+      ],
+      "pokemonLabel": "Corviknight, Bellibolt, Rayquaza",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-torterra-2024-11-15",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Torterra",
+      "dateStart": "2024-11-15",
+      "dateEnd": "2024-11-17",
+      "dateRaw": "Release Dates: Global: November 15th - November 17th 2024 Global: November 22nd - November 24t",
+      "dexNumbers": [
+        389,
+        242
+      ],
+      "pokemonLabel": "Torterra, Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-feraligatr-2024-11-01",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Feraligatr",
+      "dateStart": "2024-11-01",
+      "dateEnd": "2024-11-03",
+      "dateRaw": "Release Dates: Global: November 1st - November 3rd 2024 Global: November 8th - November 10th 2",
+      "dexNumbers": [
+        160,
+        242
+      ],
+      "pokemonLabel": "Feraligatr, Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-gengar-raids-2024-10-28",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Gengar Raids",
+      "dateStart": "2024-10-28",
+      "dateEnd": "2024-10-31",
+      "dateRaw": "Release Dates: Global: October 28th - October 31st 2024 The sixtieth Tera Raid Battle event of",
+      "dexNumbers": [
+        94
+      ],
+      "pokemonLabel": "Gengar",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-infernape-2024-10-04",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Infernape",
+      "dateStart": "2024-10-04",
+      "dateEnd": "2024-10-06",
+      "dateRaw": "Release Dates: Global: October 4th - October 6th 2024 Global: October 11th - October 13th 2024",
+      "dexNumbers": [
+        242
+      ],
+      "pokemonLabel": "Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-serperior-2024-09-20",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Serperior",
+      "dateStart": "2024-09-20",
+      "dateEnd": "2024-09-22",
+      "dateRaw": "Release Dates: Global: September 20th - September 22nd 2024 Global: September 27th - September",
+      "dexNumbers": [
+        497,
+        242
+      ],
+      "pokemonLabel": "Serperior, Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-incineroar-2024-09-06",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Incineroar",
+      "dateStart": "2024-09-06",
+      "dateEnd": "2024-09-08",
+      "dateRaw": "Release Dates: Global: September 6th - September 8th 2024 Global: September 13th - September 1",
+      "dexNumbers": [
+        727,
+        242
+      ],
+      "pokemonLabel": "Incineroar, Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-dragonite-2024-08-23",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Dragonite",
+      "dateStart": "2024-08-23",
+      "dateEnd": "2024-09-01",
+      "dateRaw": "Release Dates: Global: August 23rd - September 1st 2024 The fifty-fifth Tera Raid Battle event",
+      "dexNumbers": [
+        149
+      ],
+      "pokemonLabel": "Dragonite",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-gimmighoul-returns-2024-08-09",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Gimmighoul Returns",
+      "dateStart": "2024-08-09",
+      "dateEnd": "2024-08-22",
+      "dateRaw": "Release Dates: Global: August 9th 2024 - August 22nd 2024 The fifty-forth Tera Raid Battle eve",
+      "dexNumbers": [
+        999
+      ],
+      "pokemonLabel": "Gimmighoul",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-dondozo-2024-07-26",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Dondozo",
+      "dateStart": "2024-07-26",
+      "dateEnd": "2024-08-08",
+      "dateRaw": "Release Dates: Global: July 26th - August 8th 2024 The fifty-third Tera Raid Battle event offe",
+      "dexNumbers": [
+        977
+      ],
+      "pokemonLabel": "Dondozo",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-pikachu-returns-2024-07-12",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Pikachu Returns",
+      "dateStart": "2024-07-12",
+      "dateEnd": "2024-07-25",
+      "dateRaw": "Release Dates: Global: July 12th - July 25th 2024 The fifty-second Tera Raid Battle event offe",
+      "dexNumbers": [
+        25
+      ],
+      "pokemonLabel": "Pikachu",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-sceptile-2024-06-28",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Sceptile",
+      "dateStart": "2024-06-28",
+      "dateEnd": "2024-06-30",
+      "dateRaw": "Release Dates: Global: June 28th - June 30th 2024 Global: July 5th - July 7th 2024 The fifty-f",
+      "dexNumbers": [
+        254,
+        242
+      ],
+      "pokemonLabel": "Sceptile, Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-emboar-2024-06-14",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Emboar",
+      "dateStart": "2024-06-14",
+      "dateEnd": "2024-06-16",
+      "dateRaw": "Release Dates: Global: June 14th - June 16th 2024 Global: June 21st - June 23rd 2024 The fifti",
+      "dexNumbers": [
+        242,
+        500
+      ],
+      "pokemonLabel": "Blissey, Emboar",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-swampert-2024-05-31",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Swampert",
+      "dateStart": "2024-05-31",
+      "dateEnd": "2024-06-02",
+      "dateRaw": "Release Dates: Global: May 31st - June 2nd 2024 Global: June 7th - June 9th 2024 The forty-nin",
+      "dexNumbers": [
+        260,
+        242
+      ],
+      "pokemonLabel": "Swampert, Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-primarina-2024-05-10",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Primarina",
+      "dateStart": "2024-05-10",
+      "dateEnd": "2024-05-12",
+      "dateRaw": "Release Dates: Global: May 10th - May 12th 2024 Global: May 17th - May 19th 2024 The forty-sev",
+      "dexNumbers": [
+        730,
+        242
+      ],
+      "pokemonLabel": "Primarina, Blissey",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-walking-wake-iron-leaves-spotlight-2-2024-04-26",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Walking Wake & Iron Leaves Spotlight 2",
+      "dateStart": "2024-04-26",
+      "dateEnd": "2024-05-06",
+      "dateRaw": "Release Dates: Global: April 26th - May 6th 2024 Global: February 21st - February 27th 2025 Th",
+      "dexNumbers": [
+        1009,
+        1010
+      ],
+      "pokemonLabel": "Ondulagua, Ferroverdor",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-meganium-2024-04-05",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Meganium",
+      "dateStart": "2024-04-05",
+      "dateEnd": "2024-04-07",
+      "dateRaw": "Release Dates: Global: April 5th - April 7th 2024 Global: April 12th - April 14th 2024 The for",
+      "dexNumbers": [
+        154
+      ],
+      "pokemonLabel": "Meganium",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-charizard-returns-2024-03-13",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Charizard Returns",
+      "dateStart": "2024-03-13",
+      "dateEnd": "2024-03-17",
+      "dateRaw": "Release Dates: Global: March 13th - March 17th 2024 The forty-third Tera Raid Battle event off",
+      "dexNumbers": [
+        6
+      ],
+      "pokemonLabel": "Charizard",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-blastoise-2024-03-06",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Blastoise",
+      "dateStart": "2024-03-06",
+      "dateEnd": "2024-03-12",
+      "dateRaw": "Release Dates: Global: March 6th - March 12th 2024 The forty-second Tera Raid Battle event off",
+      "dexNumbers": [
+        9
+      ],
+      "pokemonLabel": "Blastoise",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-venusaur-2024-02-28",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Venusaur",
+      "dateStart": "2024-02-28",
+      "dateEnd": "2024-03-05",
+      "dateRaw": "Release Dates: Global: February 28th - March 5th 2024 The forty-first Tera Raid Battle event o",
+      "dexNumbers": [
+        3
+      ],
+      "pokemonLabel": "Venusaur",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-unrivaled-cinderace-2023-12-30",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Unrivaled Cinderace",
+      "dateStart": "2023-12-30",
+      "dateEnd": "2023-01-01",
+      "dateRaw": "Release Dates: Global: December 30th - January 1st 2023 Global: January 13th - 15th 2023 The f",
+      "dexNumbers": [
+        815
+      ],
+      "pokemonLabel": "Cinderace",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-trick-and-treats-from-mismagius-2023-10-27",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Trick and Treats from Mismagius",
+      "dateStart": "2023-10-27",
+      "dateEnd": "2023-10-31",
+      "dateRaw": "Release Dates: Global: October 27th - October 31st 2023 The thirtieth Tera Raid Battle event o",
+      "dexNumbers": [
+        429
+      ],
+      "pokemonLabel": "Mismagius",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-slither-wing-iron-moth-spotlight-2023-09-22",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Slither Wing & Iron Moth Spotlight",
+      "dateStart": "2023-09-22",
+      "dateEnd": "2023-09-24",
+      "dateRaw": "Release Dates: Global: September 22nd - September 24th 2023 The twenty-eighth Tera Raid Battle",
+      "dexNumbers": [
+        988,
+        994
+      ],
+      "pokemonLabel": "Reptalada, Ferropolilla",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-mewtwo-showdown-2023-09-01",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Mewtwo Showdown",
+      "dateStart": "2023-09-01",
+      "dateEnd": "2023-09-17",
+      "dateRaw": "Release Dates: Global: September 1st - September 17th 2023 The twenty-seventh Tera Raid Battle",
+      "dexNumbers": [
+        150,
+        151
+      ],
+      "pokemonLabel": "Mewtwo, Mew",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-a-show-of-supporters-2023-08-18",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "A Show of Supporters",
+      "dateStart": "2023-08-18",
+      "dateEnd": "2023-08-31",
+      "dateRaw": "Release Dates: Global: August 18th - August 31st 2023 Global: September 1st - September 17th 2",
+      "dexNumbers": [
+        150
+      ],
+      "pokemonLabel": "Mewtwo",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-prepare-the-offense-2023-08-09",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Prepare the Offense",
+      "dateStart": "2023-08-09",
+      "dateEnd": "2023-08-18",
+      "dateRaw": "Release Dates: Global: August 9th - August 18th 2023 Global: September 1st - September 17th 20",
+      "dexNumbers": [
+        150
+      ],
+      "pokemonLabel": "Mewtwo",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-rillaboom-2023-07-28",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Rillaboom",
+      "dateStart": "2023-07-28",
+      "dateEnd": "2023-07-30",
+      "dateRaw": "Release Dates: Global: July 28th - July 30th 2023 Global: August 4th - August 6th 2023 The twe",
+      "dexNumbers": [
+        812
+      ],
+      "pokemonLabel": "Rillaboom",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-delphox-2023-07-07",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Delphox",
+      "dateStart": "2023-07-07",
+      "dateEnd": "2023-07-09",
+      "dateRaw": "Release Dates: Global: July 7th - July 9th 2023 Global: July 14th - July 16th 2023 The twenty-",
+      "dexNumbers": [
+        655
+      ],
+      "pokemonLabel": "Delphox",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-gimmighoul-spotlight-2023-06-21",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Gimmighoul Spotlight",
+      "dateStart": "2023-06-21",
+      "dateEnd": "2023-07-02",
+      "dateRaw": "Release Dates: Global: June 21st - July 2nd 2023 The twenty-second Tera Raid Battle event offe",
+      "dexNumbers": [
+        999
+      ],
+      "pokemonLabel": "Gimmighoul",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-great-tusk-iron-treads-spotlight-2023-05-19",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Great Tusk & Iron Treads Spotlight",
+      "dateStart": "2023-05-19",
+      "dateEnd": "2023-06-16",
+      "dateRaw": "Release Dates: Global: May 19th 2023 Global: June 16th - 18th 2023 The twenty-first Tera Raid",
+      "dexNumbers": [
+        990,
+        984
+      ],
+      "pokemonLabel": "Ferrodada, Colmilargo",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-chesnaught-2023-05-12",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Chesnaught",
+      "dateStart": "2023-05-12",
+      "dateEnd": "2023-05-14",
+      "dateRaw": "Release Dates: Global: May 12th - May 14th 2023 Global: June 16th - 18th 2023 The twentieth Te",
+      "dexNumbers": [
+        652
+      ],
+      "pokemonLabel": "Chesnaught",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-inteleon-2023-04-28",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Inteleon",
+      "dateStart": "2023-04-28",
+      "dateEnd": "2023-04-30",
+      "dateRaw": "Release Dates: Global: April 28th - April 30th 2023 Global: May 5th - May 7th 2023 The ninteen",
+      "dexNumbers": [
+        818
+      ],
+      "pokemonLabel": "Inteleon",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-typhlosion-2023-04-14",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Typhlosion",
+      "dateStart": "2023-04-14",
+      "dateEnd": "2023-04-16",
+      "dateRaw": "Release Dates: Global: April 14th - April 16th 2023 Global: April 21st - April 23rd 2023 The e",
+      "dexNumbers": [
+        157
+      ],
+      "pokemonLabel": "Typhlosion",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-mighty-samurott-2023-03-31",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Mighty Samurott",
+      "dateStart": "2023-03-31",
+      "dateEnd": "2023-04-02",
+      "dateRaw": "Release Dates: Global: March 31st - April 2nd 2023 Global: April 7th - April 9th 2023 The sixt",
+      "dexNumbers": [
+        503
+      ],
+      "pokemonLabel": "Samurott",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-walking-wake-iron-leaves-spotlight-2023-02-27",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Walking Wake & Iron Leaves Spotlight",
+      "dateStart": "2023-02-27",
+      "dateEnd": "2023-03-12",
+      "dateRaw": "Release Dates: Global: February 27th - March 12th 2023 Global: May 1st - May 14th 2023 Global:",
+      "dexNumbers": [
+        1009,
+        1010
+      ],
+      "pokemonLabel": "Ondulagua, Ferroverdor",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "escarlata-purpura-eevee-spotlight-2022-11-25",
+      "game": "Escarlata/Púrpura",
+      "generation": 9,
+      "title": "Eevee Spotlight",
+      "dateStart": "2022-11-25",
+      "dateEnd": "2022-11-27",
+      "dateRaw": "Release Dates: Global: November 25th 2022 - November 27th 2022 The first Tera Raid Battle even",
+      "dexNumbers": [
+        133
+      ],
+      "pokemonLabel": "Eevee",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml"
+    },
+    {
+      "id": "espada-escudo-finale-2022-11-01",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Finale",
+      "dateStart": "2022-11-01",
+      "dateEnd": null,
+      "dateRaw": "Release Dates: Global: November 1st 2022 - End of Service The final event and the now standard",
+      "dexNumbers": [],
+      "pokemonLabel": null,
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-challenge-glastrier-spectrier-event-2022-10-21",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Challenge Glastrier & Spectrier Event",
+      "dateStart": "2022-10-21",
+      "dateEnd": "2022-10-23",
+      "dateRaw": "Release Dates: Global: October 21st - October 23rd 2022 The October special Max Raid Battle ev",
+      "dexNumbers": [
+        896,
+        897
+      ],
+      "pokemonLabel": "Glastrier, Spectrier",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-battle-under-full-moon-event-2022-09-09",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Battle Under Full Moon Event",
+      "dateStart": "2022-09-09",
+      "dateEnd": "2022-09-19",
+      "dateRaw": "Release Dates: Global: September 9th - September 19th 2022 The September special Max Raid Batt",
+      "dexNumbers": [
+        872
+      ],
+      "pokemonLabel": "Snom",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-scary-summer-event-2022-08-12",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Scary Summer Event",
+      "dateStart": "2022-08-12",
+      "dateEnd": "2022-08-21",
+      "dateRaw": "Release Dates: Global: August 12th - August 21st2022 The August special Max Raid Battle event",
+      "dexNumbers": [
+        861
+      ],
+      "pokemonLabel": "Grimmsnarl",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-shell-ebration-event-2022-05-22",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Shell-ebration Event",
+      "dateStart": "2022-05-22",
+      "dateEnd": null,
+      "dateRaw": "Release Dates: Global: May 22nd 2022 The May special Max Raid Battle event focused around the",
+      "dexNumbers": [
+        90
+      ],
+      "pokemonLabel": "Shellder",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-sudowoodo-event-2022-04-01",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Sudowoodo Event",
+      "dateStart": "2022-04-01",
+      "dateEnd": null,
+      "dateRaw": "Release Dates: Global: April 1st 2022 The April Fools special Max Raid Battle event focused ar",
+      "dexNumbers": [
+        185
+      ],
+      "pokemonLabel": "Sudowoodo",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-fossil-event-2022-03-18",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Fossil Event",
+      "dateStart": "2022-03-18",
+      "dateEnd": "2022-03-27",
+      "dateRaw": "Release Dates: Global: March 18th - March 27th 2022 The March special Max Raid Battle event wa",
+      "dexNumbers": [
+        697
+      ],
+      "pokemonLabel": "Tyrantrum",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-meteorite-event-2021-09-17",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Meteorite Event",
+      "dateStart": "2021-09-17",
+      "dateEnd": "2021-09-19",
+      "dateRaw": "Release Dates: Global: September 17th - September 19th 2021 The September special Max Raid Bat",
+      "dexNumbers": [
+        337,
+        338
+      ],
+      "pokemonLabel": "Lunatone, Solrock",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-cleaning-event-2021-09-03",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Cleaning Event",
+      "dateStart": "2021-09-03",
+      "dateEnd": "2021-09-05",
+      "dateRaw": "Release Dates: Global: September 3rd - September 5th 2021 The September special Max Raid Battl",
+      "dexNumbers": [
+        573
+      ],
+      "pokemonLabel": "Cinccino",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-summer-ghost-event-2021-08-20",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Summer Ghost Event",
+      "dateStart": "2021-08-20",
+      "dateEnd": "2021-08-22",
+      "dateRaw": "Release Dates: Global: August 20th - August 22nd 2021 The August special Max Raid Battle event",
+      "dexNumbers": [
+        609
+      ],
+      "pokemonLabel": "Chandelure",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-summer-event-2021-08-06",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Summer Event",
+      "dateStart": "2021-08-06",
+      "dateEnd": "2021-08-08",
+      "dateRaw": "Release Dates: Global: August 6th - August 8th 2021 The August special Max Raid Battle event f",
+      "dexNumbers": [
+        584
+      ],
+      "pokemonLabel": "Vanilluxe",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-fossil-event-2021-07-23",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Fossil Event",
+      "dateStart": "2021-07-23",
+      "dateEnd": "2021-07-25",
+      "dateRaw": "Release Dates: Global: July 23rd - July 25th 2021 The July special Max Raid Battle event featu",
+      "dexNumbers": [
+        138
+      ],
+      "pokemonLabel": "Omanyte",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-curry-class-event-2021-07-09",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Curry Class Event",
+      "dateStart": "2021-07-09",
+      "dateEnd": "2021-07-11",
+      "dateRaw": "Release Dates: Global: July 9th - July 11th 2021 The July special Max Raid Battle event featur",
+      "dexNumbers": [
+        879
+      ],
+      "pokemonLabel": "Copperajah",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-tentacle-pok-mon-event-2021-06-25",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Tentacle Pok�mon Event",
+      "dateStart": "2021-06-25",
+      "dateEnd": "2021-06-27",
+      "dateRaw": "Release Dates: Global: June 25th - June 27th 2021 The late June special Max Raid Battle event",
+      "dexNumbers": [
+        853
+      ],
+      "pokemonLabel": "Grapploct",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-froggy-pok-mon-event-2021-06-04",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Froggy Pok�mon Event",
+      "dateStart": "2021-06-04",
+      "dateEnd": "2021-06-06",
+      "dateRaw": "Release Dates: Global: June 4th - June 6th 2021 The early June special Max Raid Battle event f",
+      "dexNumbers": [
+        3,
+        186
+      ],
+      "pokemonLabel": "Venusaur, Politoed",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-wooloo-event-2021-05-21",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Wooloo Event",
+      "dateStart": "2021-05-21",
+      "dateEnd": "2021-05-23",
+      "dateRaw": "Release Dates: Global: May 21st - May 23rd 2021 The late April special Max Raid Battle event f",
+      "dexNumbers": [
+        832,
+        831
+      ],
+      "pokemonLabel": "Dubwool, Wooloo",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-meowth-festival-event-2021-04-30",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Meowth Festival Event",
+      "dateStart": "2021-04-30",
+      "dateEnd": "2021-05-02",
+      "dateRaw": "Release Dates: Global: April 30th - May 2nd 2021 The late April special Max Raid Battle event",
+      "dexNumbers": [
+        52
+      ],
+      "pokemonLabel": "Meowth",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-world-penguin-day-event-2021-04-23",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "World Penguin Day Event",
+      "dateStart": "2021-04-23",
+      "dateEnd": "2021-04-25",
+      "dateRaw": "Release Dates: Global: April 23rd - April 25th 2021 The mid April special Max Raid Battle even",
+      "dexNumbers": [
+        875
+      ],
+      "pokemonLabel": "Eiscue",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-early-route-event-2021-04-05",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Early Route Event",
+      "dateStart": "2021-04-05",
+      "dateEnd": "2021-04-20",
+      "dateRaw": "Release Dates: Global: April 5th 2021 - ??? 2021 The April 2021 Wild Area Event was focused ar",
+      "dexNumbers": [
+        132
+      ],
+      "pokemonLabel": "Ditto",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-easter-event-2021-04-02",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Easter Event",
+      "dateStart": "2021-04-02",
+      "dateEnd": "2021-04-04",
+      "dateRaw": "Release Dates: Global: April 2nd - April 4th 2021 The early April special Max Raid Battle even",
+      "dexNumbers": [
+        184
+      ],
+      "pokemonLabel": "Azumarill",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-april-fools-day-event-2021-04-01",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "April Fools Day Event",
+      "dateStart": "2021-04-01",
+      "dateEnd": null,
+      "dateRaw": "Release Dates: Global: April 1st 2021 The April special Max Raid Battle event features nothing",
+      "dexNumbers": [
+        129
+      ],
+      "pokemonLabel": "Magikarp",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-flower-event-2021-03-26",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Flower Event",
+      "dateStart": "2021-03-26",
+      "dateEnd": "2021-03-28",
+      "dateRaw": "Release Dates: Global: March 26th - March 28th 2021 The Mid-March special Max Raid Battle even",
+      "dexNumbers": [
+        549
+      ],
+      "pokemonLabel": "Lilligant",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-fairy-flying-event-2021-03-01",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Fairy & Flying Event",
+      "dateStart": "2021-03-01",
+      "dateEnd": "2021-03-31",
+      "dateRaw": "Release Dates: Global: March 1st - March 31st 2021 The March 2021 Wild Area Event was focused",
+      "dexNumbers": [
+        823,
+        858
+      ],
+      "pokemonLabel": "Corviknight, Hatterene",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-pok-mon-day-2021-event-2021-02-26",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Pok�mon Day 2021 Event",
+      "dateStart": "2021-02-26",
+      "dateEnd": "2021-02-28",
+      "dateRaw": "Release Dates: Global: February 26th - February 28th 2021 The late February special Max Raid B",
+      "dexNumbers": [
+        25
+      ],
+      "pokemonLabel": "Pikachu",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-valentine-s-day-2021-event-2021-02-11",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Valentine's Day 2021 Event",
+      "dateStart": "2021-02-11",
+      "dateEnd": "2021-02-14",
+      "dateRaw": "Release Dates: Global: February 11th - February 14th 2021 The Mid-February special Max Raid Ba",
+      "dexNumbers": [
+        868
+      ],
+      "pokemonLabel": "Milcery",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-secrets-of-the-jungle-event-2021-02-04",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Secrets of the Jungle Event",
+      "dateStart": "2021-02-04",
+      "dateEnd": "2021-02-08",
+      "dateRaw": "Release Dates: Global: February 4th - February 8th 2021 The February special Max Raid Battle e",
+      "dexNumbers": [
+        845
+      ],
+      "pokemonLabel": "Cramorant",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-fighting-psychic-event-2021-02-01",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Fighting & Psychic Event",
+      "dateStart": "2021-02-01",
+      "dateEnd": "2021-02-28",
+      "dateRaw": "Release Dates: Global: February 1st - February 28th 2021 The February 2021 Wild Area Event was",
+      "dexNumbers": [
+        826,
+        68
+      ],
+      "pokemonLabel": "Orbeetle, Machamp",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-year-of-the-ox-event-2021-01-22",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Year of the Ox Event",
+      "dateStart": "2021-01-22",
+      "dateEnd": "2021-01-24",
+      "dateRaw": "Release Dates: Global: January 22nd - January 24th 2021 The January special Max Raid Battle ev",
+      "dexNumbers": [
+        128
+      ],
+      "pokemonLabel": "Tauros",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-berry-event-2021-01-08",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Berry Event",
+      "dateStart": "2021-01-08",
+      "dateEnd": "2021-01-10",
+      "dateRaw": "Release Dates: Global: January 8th - January 10th 2021 The January special Max Raid Battle eve",
+      "dexNumbers": [
+        820,
+        819
+      ],
+      "pokemonLabel": "Greedent, Skwovet",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-normal-dragon-event-2021-01-01",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Normal & Dragon Event",
+      "dateStart": "2021-01-01",
+      "dateEnd": "2021-01-31",
+      "dateRaw": "Release Dates: Global: January 1st - January 31st 2021 The January 2021 Wild Area Event was fo",
+      "dexNumbers": [
+        884,
+        143
+      ],
+      "pokemonLabel": "Duraludon, Snorlax",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-christmas-2020-2020-12-25",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Christmas 2020",
+      "dateStart": "2020-12-25",
+      "dateEnd": "2020-12-27",
+      "dateRaw": "Release Dates: Global: December 25th - December 27th 2020 The December 2020 Special Wild Area",
+      "dexNumbers": [
+        225,
+        37
+      ],
+      "pokemonLabel": "Delibird, Vulpix",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-ice-fire-event-2020-12-01",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Ice & Fire Event",
+      "dateStart": "2020-12-01",
+      "dateEnd": "2020-12-31",
+      "dateRaw": "Release Dates: Global: December 1st - December 31st 2020 The December 2020 Wild Area Event was",
+      "dexNumbers": [
+        851,
+        78,
+        77,
+        131
+      ],
+      "pokemonLabel": "Centiskorch, Rapidash, Ponyta, Lapras",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-berry-event-2020-11-20",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Berry Event",
+      "dateStart": "2020-11-20",
+      "dateEnd": "2020-11-22",
+      "dateRaw": "Release Dates: Global: November 20th - November 22nd 2020 The November special Max Raid Battle",
+      "dexNumbers": [
+        819
+      ],
+      "pokemonLabel": "Skwovet",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-bug-poison-event-2020-11-02",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Bug & Poison Event",
+      "dateStart": "2020-11-02",
+      "dateEnd": "2020-11-30",
+      "dateRaw": "Release Dates: Global: November 2nd - November 30th 2020 The November 2020 Wild Area Event was",
+      "dexNumbers": [
+        12,
+        569
+      ],
+      "pokemonLabel": "Butterfree, Garbodor",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-ghost-dark-event-2020-10-31",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Ghost & Dark Event",
+      "dateStart": "2020-10-31",
+      "dateEnd": "2020-10-20",
+      "dateRaw": "Release Dates: Global: October1st - October 31st 2020 The October 2020 Wild Area Event was foc",
+      "dexNumbers": [
+        861,
+        94
+      ],
+      "pokemonLabel": "Grimmsnarl, Gengar",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-halloween-raids-2020-10-30",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Halloween Raids",
+      "dateStart": "2020-10-30",
+      "dateEnd": "2020-11-01",
+      "dateRaw": "Release Dates: Global: October 30th - November 1st 2020 The September special Max Raid Battle",
+      "dexNumbers": [
+        711
+      ],
+      "pokemonLabel": "Gourgeist",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-september-seasonal-equinox-event-2020-09-18",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "September Seasonal Equinox Event",
+      "dateStart": "2020-09-18",
+      "dateEnd": "2020-09-20",
+      "dateRaw": "Release Dates: Global: September 18th - September 20th 2020 The September special Max Raid Bat",
+      "dexNumbers": [
+        36
+      ],
+      "pokemonLabel": "Clefable",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-electric-grass-event-2020-09-01",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Electric & Grass Event",
+      "dateStart": "2020-09-01",
+      "dateEnd": "2020-09-31",
+      "dateRaw": "Release Dates: Global: September 1st - September 31st 2020 The September 2020 Wild Area Event",
+      "dexNumbers": [
+        849,
+        842,
+        841
+      ],
+      "pokemonLabel": "Toxtricity, Appletun, Flapple",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-pikachu-outbreak-2020-08-06",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Pikachu Outbreak",
+      "dateStart": "2020-08-06",
+      "dateEnd": "2020-08-09",
+      "dateRaw": "Release Dates: Global: August 6th - August 9th 2020 The August special Max Raid Battle event f",
+      "dexNumbers": [
+        25,
+        778,
+        26
+      ],
+      "pokemonLabel": "Pikachu, Mimikyu, Raichu",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-water-ground-event-2020-08-01",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Water & Ground Event",
+      "dateStart": "2020-08-01",
+      "dateEnd": "2020-08-31",
+      "dateRaw": "Release Dates: Global: August 1st - August 31st 2020 The August 2020 Wild Area Event was focus",
+      "dexNumbers": [
+        844,
+        834
+      ],
+      "pokemonLabel": "Sandaconda, Drednaw",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-sea-pok-mon-invasion-2020-07-17",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Sea Pok�mon Invasion",
+      "dateStart": "2020-07-17",
+      "dateEnd": "2020-07-19",
+      "dateRaw": "Release Dates: Global: July 17th - July 19th 2020 This Extra Event, for one weekend, added a l",
+      "dexNumbers": [
+        321
+      ],
+      "pokemonLabel": "Wailord",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-rock-steel-event-2020-06-30",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Rock & Steel Event",
+      "dateStart": "2020-06-30",
+      "dateEnd": "2020-07-31",
+      "dateRaw": "Release Dates: Global: June 30th - July 31st 2020 The July 2020 Wild Area Event was focused ar",
+      "dexNumbers": [
+        879,
+        839
+      ],
+      "pokemonLabel": "Copperajah, Coalossal",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-zeraora-event-2020-06-17",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Zeraora Event",
+      "dateStart": "2020-06-17",
+      "dateEnd": "2020-06-28",
+      "dateRaw": "Release Dates: Global: June 17th - June 28th 2020 To celebrate the release of the Isle of Armo",
+      "dexNumbers": [
+        807
+      ],
+      "pokemonLabel": "Zeraora",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-gigantamax-pok-mon-return-2020-06-02",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Gigantamax Pok�mon Return",
+      "dateStart": "2020-06-02",
+      "dateEnd": "2020-06-17",
+      "dateRaw": "Release Dates: Global: June 2nd - June 17th 2020, June 29th 2020 If you play during this allot",
+      "dexNumbers": [
+        823,
+        851,
+        12,
+        844,
+        849,
+        861,
+        879,
+        6,
+        839,
+        884,
+        569,
+        826,
+        842,
+        869,
+        25,
+        68,
+        99,
+        143,
+        834,
+        841,
+        52,
+        94,
+        131,
+        133
+      ],
+      "pokemonLabel": "Corviknight, Centiskorch, Butterfree, Sandaconda, Toxtricity, Grimmsnarl y 18 más",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-gigantamax-meowth-2020-05-26",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Gigantamax Meowth",
+      "dateStart": "2020-05-26",
+      "dateEnd": "2020-06-02",
+      "dateRaw": "Release Dates: Global: May 26th 2020 - June 2nd 2020 If you play during this allotted time, yo",
+      "dexNumbers": [
+        25,
+        52
+      ],
+      "pokemonLabel": "Pikachu, Meowth",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-gigantamax-eevee-2020-05-19",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Gigantamax Eevee",
+      "dateStart": "2020-05-19",
+      "dateEnd": "2020-05-25",
+      "dateRaw": "Release Dates: Global: May 19th 2020 - May 25th 2020 If you play during this allotted time, yo",
+      "dexNumbers": [
+        25,
+        133
+      ],
+      "pokemonLabel": "Pikachu, Eevee",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-gigantamax-pikachu-2020-05-12",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Gigantamax Pikachu",
+      "dateStart": "2020-05-12",
+      "dateEnd": "2020-05-18",
+      "dateRaw": "Release Dates: Global: May 12th 2020 - May 18th 2020 If you play during this allotted time, yo",
+      "dexNumbers": [
+        25
+      ],
+      "pokemonLabel": "Pikachu",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-may-2020-competitve-2020-04-28",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "May 2020 - Competitve",
+      "dateStart": "2020-04-28",
+      "dateEnd": "2020-05-11",
+      "dateRaw": "Release Dates: Global: April 28th 2020 - May 11th 2020 If you play during this allotted time,",
+      "dexNumbers": [
+        248,
+        530,
+        887,
+        468,
+        479
+      ],
+      "pokemonLabel": "Tyranitar, Excadrill, Dragapult, Togekiss, Rotom",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-easter-2020-2020-04-10",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Easter 2020",
+      "dateStart": "2020-04-10",
+      "dateEnd": "2020-04-15",
+      "dateRaw": "Release Dates: Global: April 10th 2020 - April 15th 2020 If you play during this allotted time",
+      "dexNumbers": [
+        132
+      ],
+      "pokemonLabel": "Ditto",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-gigantamax-duraludon-charizard-2020-03-26",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Gigantamax Duraludon & Charizard",
+      "dateStart": "2020-03-26",
+      "dateEnd": "2020-04-28",
+      "dateRaw": "Release Dates: Global: March 26th 2020 - April 28th 2020 If you play during this allotted time",
+      "dexNumbers": [
+        879,
+        6,
+        884,
+        569
+      ],
+      "pokemonLabel": "Copperajah, Charizard, Duraludon, Garbodor",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-pok-dex-completion-event-2020-03-19",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Pok�dex Completion Event",
+      "dateStart": "2020-03-19",
+      "dateEnd": "2020-03-25",
+      "dateRaw": "Release Dates: Global: March 19th 2020 - March 25th 2020 If you play during this allotted time",
+      "dexNumbers": [
+        588,
+        589,
+        871,
+        630,
+        766,
+        78,
+        554,
+        617,
+        628,
+        765,
+        876,
+        68,
+        143,
+        222,
+        616,
+        77,
+        94,
+        840
+      ],
+      "pokemonLabel": "Karrablast, Escavalier, Pincurchin, Mandibuzz, Passimian, Rapidash y 12 más",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-gigantamax-machamp-gengar-2020-03-09",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Gigantamax Machamp & Gengar",
+      "dateStart": "2020-03-09",
+      "dateEnd": "2020-03-18",
+      "dateRaw": "Release Dates: Global: March 9th 2020 - March 18th 2020 If you play during this allotted time,",
+      "dexNumbers": [
+        68,
+        143,
+        94
+      ],
+      "pokemonLabel": "Machamp, Snorlax, Gengar",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-kanto-starters-mewtwo-2020-02-27",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Kanto Starters & Mewtwo",
+      "dateStart": "2020-02-27",
+      "dateEnd": "2020-03-01",
+      "dateRaw": "Release Dates: Global: February 27th 2020 - March 1st 2020 If you play during this allotted ti",
+      "dexNumbers": [
+        150
+      ],
+      "pokemonLabel": "Mewtwo",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-gigantamax-toxtricity-2020-02-16",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Gigantamax Toxtricity",
+      "dateStart": "2020-02-16",
+      "dateEnd": "2020-03-08",
+      "dateRaw": "Release Dates: Global: February 16th 2020 - March 8th 2020 If you play during this allotted ti",
+      "dexNumbers": [
+        849,
+        861,
+        858,
+        826,
+        99
+      ],
+      "pokemonLabel": "Toxtricity, Grimmsnarl, Hatterene, Orbeetle, Kingler",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-milcery-gigantamax-toxtricity-2020-02-07",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Milcery & Gigantamax Toxtricity",
+      "dateStart": "2020-02-07",
+      "dateEnd": "2020-02-16",
+      "dateRaw": "Release Dates: Global: February 7th 2020 - February 16th 2020 If you play during this allotted",
+      "dexNumbers": [
+        849,
+        861,
+        858,
+        826,
+        99,
+        868
+      ],
+      "pokemonLabel": "Toxtricity, Grimmsnarl, Hatterene, Orbeetle, Kingler, Milcery",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-coalossal-lapras-flapple-appletun-milcery-2020-01-31",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Coalossal, Lapras, Flapple, Appletun & Milcery",
+      "dateStart": "2020-01-31",
+      "dateEnd": "2020-02-06",
+      "dateRaw": "Release Dates: Global: January 31st 2020 - February 6th2020 If you play during this allotted t",
+      "dexNumbers": [
+        839,
+        842,
+        869,
+        841,
+        868,
+        131
+      ],
+      "pokemonLabel": "Coalossal, Appletun, Alcremie, Flapple, Milcery, Lapras",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-coalossal-lapras-flapple-appletun-alcremie-2020-01-09",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Coalossal, Lapras, Flapple, Appletun & Alcremie",
+      "dateStart": "2020-01-09",
+      "dateEnd": "2020-01-30",
+      "dateRaw": "Release Dates: Global: January 9th 2020 - January 30th 2020 If you play during this allotted t",
+      "dexNumbers": [
+        839,
+        842,
+        869,
+        841,
+        131
+      ],
+      "pokemonLabel": "Coalossal, Appletun, Alcremie, Flapple, Lapras",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-magikarp-2019-12-31",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Magikarp",
+      "dateStart": "2019-12-31",
+      "dateEnd": "2020-01-03",
+      "dateRaw": "Release Dates: Global: December 31st 2019 - January 3rd 2020 If you play during this allotted",
+      "dexNumbers": [
+        129
+      ],
+      "pokemonLabel": "Magikarp",
+      "shiny": "possible",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-delibird-2019-12-20",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Delibird",
+      "dateStart": "2019-12-20",
+      "dateEnd": "2019-12-25",
+      "dateRaw": "Release Dates: Global: December 20th 2019 - December 25th 2019 If you play during this allotte",
+      "dexNumbers": [
+        225
+      ],
+      "pokemonLabel": "Delibird",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-snorlax-2019-12-04",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Snorlax",
+      "dateStart": "2019-12-04",
+      "dateEnd": "2020-01-09",
+      "dateRaw": "Release Dates: Global: December 4th 2019 - January 9th 2020 If you play during this allotted t",
+      "dexNumbers": [
+        143
+      ],
+      "pokemonLabel": "Snorlax",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    },
+    {
+      "id": "espada-escudo-butterfree-drednaw-corviknight-2019-11-15",
+      "game": "Espada/Escudo",
+      "generation": 8,
+      "title": "Butterfree, Drednaw & Corviknight",
+      "dateStart": "2019-11-15",
+      "dateEnd": "2019-12-04",
+      "dateRaw": "Release Dates: Global: November 15th 2019 - December 4th 2019 If you play during this allotted",
+      "dexNumbers": [
+        823,
+        12,
+        834
+      ],
+      "pokemonLabel": "Corviknight, Butterfree, Drednaw",
+      "shiny": "desconocido",
+      "sourceUrl": "https://www.serebii.net/swordshield/wildareaevents.shtml"
+    }
+  ]
 }
