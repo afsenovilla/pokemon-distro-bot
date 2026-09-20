@@ -23,4 +23,4 @@ POKETRACKER_REPO = "afsenovilla/poketracker"
 # distribuciones y para el limitador de peticiones por usuario.
 [[kv_namespaces]]
 binding = "DISTRO_KV"
-id = "REEMPLAZA_CON_TU_KV_ID"
+id = "8942ff640ff14b9fb9fbf6a4e07d3f2d"
