@@ -1,0 +1,20 @@
+{
+  "name": "pokemon-distro-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Bot de Telegram público con el historial completo de distribuciones de Pokémon (juegos, shiny verificado desde la wondercard, descarga del archivo) y las distribuciones activas/anunciadas del juego actual.",
+  "scripts": {
+    "update-status": "node scripts/fetch-distributions.mjs",
+    "update-gallery": "node scripts/fetch-eventsgallery.mjs",
+    "test": "node scripts/test-lib.mjs && node scripts/test-parser.mjs && node scripts/test-poketracker.mjs",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.4.0"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0"
+  }
+}

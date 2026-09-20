@@ -1,0 +1,8 @@
+{
+  "generatedAt": null,
+  "speciesTracked": 0,
+  "totalEntries": 0,
+  "errors": [],
+  "entries": [],
+  "_comment": "Este archivo lo genera automáticamente scripts/fetch-distributions.mjs (vía GitHub Actions, cada semana). Está vacío porque todavía no se ha ejecutado ninguna actualización real; en cuanto se lance el workflow 'Actualizar distribuciones' (manual o por el cron semanal), se rellenará con datos reales sacados de Bulbapedia y este comentario desaparecerá."
+}

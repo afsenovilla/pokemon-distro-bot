@@ -1,0 +1,26 @@
+name = "pokemon-distro-bot"
+main = "src/worker.js"
+compatibility_date = "2025-09-01"
+
+# Se ejecuta una vez a la semana: refresca la caché en KV con el JSON que
+# publica el GitHub Action en data/distributions.json.
+[triggers]
+crons = ["0 6 * * 1"]
+
+# Variables no secretas. Cambia GITHUB_DATA_URL y GITHUB_GALLERY_URL por
+# las URLs "raw" de tu propio repo en GitHub una vez lo hayas subido.
+[vars]
+GITHUB_DATA_URL = "https://raw.githubusercontent.com/TU_USUARIO/TU_REPO/main/data/distributions.json"
+GITHUB_GALLERY_URL = "https://raw.githubusercontent.com/TU_USUARIO/TU_REPO/main/data/eventsgallery.json"
+BOT_NAME = "Pokémon Distribuciones Bot"
+
+# Repo público de Poketracker a cruzar en /faltan ("usuario/repo"). Déjalo
+# vacío ("") si no quieres esta función.
+POKETRACKER_REPO = "afsenovilla/poketracker"
+
+# Crea el namespace de KV desde el dashboard de Cloudflare (Workers & Pages
+# -> KV) y sustituye "id" por el que te den. Sirve como caché rápida de las
+# distribuciones y para el limitador de peticiones por usuario.
+[[kv_namespaces]]
+binding = "DISTRO_KV"
+id = "REEMPLAZA_CON_TU_KV_ID"
