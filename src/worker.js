@@ -125,7 +125,7 @@ async function isRateLimited(env, chatId) {
   const current = await env.DISTRO_KV.get(key);
   const count = current ? Number(current) : 0;
   if (count >= 8) return true;
-  await env.DISTRO_KV.put(key, String(count + 1), { expirationTtl: 20 });
+  await env.DISTRO_KV.put(key, String(count + 1), { expirationTtl: 60 });
   return false;
 }
 
