@@ -260,18 +260,39 @@ const EVENT_SHINY_TEXT = {
 };
 
 /** Formatea una entrada de data/events.json (eventos in-game: raids, etc.,
- * NO Mystery Gift). */
-export function formatEventEntry(entry, { showTitle = true } = {}) {
+ * NO Mystery Gift). showGame se puede desactivar cuando el juego ya se
+ * indica como cabecera del grupo (ver groupByGame). */
+export function formatEventEntry(entry, { showTitle = true, showGame = true } = {}) {
   const status = computeStatus(entry, new Date().toISOString().slice(0, 10));
   const lines = [];
   if (showTitle) {
-    lines.push(`<b>${escapeHtml(entry.titleEs || entry.title)}</b> — ${escapeHtml(entry.game || "Juego no especificado")}`);
+    const title = `<b>${escapeHtml(entry.titleEs || entry.title)}</b>`;
+    lines.push(showGame ? `${title} — ${escapeHtml(entry.game || "Juego no especificado")}` : title);
   }
   lines.push(`📅 ${dateRange(entry)} · ${statusLabel(status)}`);
   if (entry.pokemonLabel) lines.push(`🎯 ${escapeHtml(entry.pokemonLabel)}`);
   lines.push(EVENT_SHINY_TEXT[entry.shiny] || EVENT_SHINY_TEXT.desconocido);
   if (entry.sourceUrl) lines.push(`🔗 <a href="${escapeHtml(entry.sourceUrl)}">Más info</a>`);
   return lines.join("\n");
+}
+
+/** Agrupa entradas (de data/events.json o data/distributions.json, ambas
+ * tienen un campo "game") por juego, de la generación más reciente a la
+ * más antigua. Mantiene el orden relativo que ya traían dentro de cada
+ * grupo (para no deshacer el ordenado por fecha que haga quien llama). */
+export function groupByGame(entries) {
+  const groups = new Map();
+  for (const e of entries) {
+    const label = e.game || "Juego no especificado";
+    if (!groups.has(label)) groups.set(label, []);
+    groups.get(label).push(e);
+  }
+  const sortedLabels = [...groups.keys()].sort((a, b) => {
+    const ga = groups.get(a)[0]?.generation ?? 0;
+    const gb = groups.get(b)[0]?.generation ?? 0;
+    return gb - ga;
+  });
+  return sortedLabels.map((label) => ({ label, entries: groups.get(label) }));
 }
 
 /** Distribuciones Mystery Gift activas ahora mismo (data/distributions.json)

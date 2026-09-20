@@ -4,6 +4,7 @@ import {
   formatGalleryEntry,
   formatEventEntry,
   formatHistoryByConsole,
+  groupByGame,
   findActiveDistributionsForDex,
   findActiveEventsForDex,
   searchGallery,
@@ -356,6 +357,19 @@ async function handleProximas(env, chatId) {
   await sendMessage(env, chatId, header + body + footer);
 }
 
+/** Junta las entradas ya recortadas al LIMIT en bloques por juego (más
+ * reciente primero), con una cabecera "🎮 Juego" por grupo en vez de
+ * repetir "— Juego" en cada evento. */
+function buildGroupedEventsBody(shown) {
+  return groupByGame(shown)
+    .map((g) => {
+      const header = `🎮 <b>${escapeHtml(g.label)}</b>`;
+      const items = g.entries.map((e) => formatEventEntry(e, { showGame: false })).join("\n\n");
+      return `${header}\n\n${items}`;
+    })
+    .join("\n\n\n");
+}
+
 async function handleEventosActivos(env, chatId) {
   const { entries } = await getEventsDataset(env);
   const activos = entries
@@ -368,7 +382,7 @@ async function handleEventosActivos(env, chatId) {
   }
   const LIMIT = 15;
   const shown = activos.slice(0, LIMIT);
-  const body = shown.map((e) => formatEventEntry(e)).join("\n\n");
+  const body = buildGroupedEventsBody(shown);
   const header = `<b>Eventos in-game activos ahora (${activos.length})</b>\n\n`;
   const footer = activos.length > LIMIT ? `\n\n… y ${activos.length - LIMIT} más.` : "";
   await sendMessage(env, chatId, header + body + footer);
@@ -386,7 +400,7 @@ async function handleEventosProximos(env, chatId) {
   }
   const LIMIT = 15;
   const shown = proximos.slice(0, LIMIT);
-  const body = shown.map((e) => formatEventEntry(e)).join("\n\n");
+  const body = buildGroupedEventsBody(shown);
   const header = `<b>Eventos in-game anunciados (${proximos.length})</b>\n\n`;
   const footer = proximos.length > LIMIT ? `\n\n… y ${proximos.length - LIMIT} más.` : "";
   await sendMessage(env, chatId, header + body + footer);
