@@ -1,0 +1,60 @@
+name: Actualizar distribuciones
+
+on:
+  schedule:
+    # Todos los lunes a las 05:00 UTC (~07:00 hora de Madrid en verano)
+    - cron: "0 5 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Instalar dependencias
+        run: npm install --no-save cheerio
+
+      # continue-on-error en cada fuente: si una falla (p. ej. Bulbapedia o
+      # Serebii cambian de formato, o bloquean el scraping), las demás
+      # igualmente se regeneran y se commitean — no dejamos que un fallo en
+      # una fuente se lleve por delante la actualización de las otras dos.
+      - name: Estado activas/anunciadas (Bulbapedia, juego actual)
+        run: node scripts/fetch-distributions.mjs
+        continue-on-error: true
+
+      - name: Historial completo + shiny verificado (EventsGallery)
+        run: node scripts/fetch-eventsgallery.mjs
+        continue-on-error: true
+
+      - name: Eventos in-game (Serebii, no Mystery Gift, no Pokémon GO)
+        run: node scripts/fetch-events.mjs
+        continue-on-error: true
+
+      - name: Guardar cambios en el repositorio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/distributions.json data/eventsgallery.json data/events.json
+          if git diff --cached --quiet; then
+            echo "Sin cambios en los datos, no se hace commit."
+          else
+            git commit -m "chore: actualizar distribuciones ($(date -u +%Y-%m-%d))"
+            git push
+          fi
+
+      - name: Avisar a Cloudflare de que hay datos nuevos
+        if: ${{ vars.CLOUDFLARE_REFRESH_URL != '' }}
+        run: |
+          curl -fsS -X POST "${{ vars.CLOUDFLARE_REFRESH_URL }}" \
+            -H "X-Refresh-Secret: ${{ secrets.REFRESH_SECRET }}" || \
+            echo "No se pudo avisar al Worker (no es crítico, se refrescará solo con su cron semanal)."
