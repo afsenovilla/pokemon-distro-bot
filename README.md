@@ -12,8 +12,11 @@ en cuanto detecta una distribución o evento nuevo — con botones para
 posponer el aviso, marcarlo como hecho o silenciarlo, todo por usuario.
 
 Sigue el mismo patrón que tus otros bots: **Cloudflare Workers + KV**,
-desplegado conectando el Worker a GitHub (nada de CLI ni entorno local), y
-todo administrable desde el navegador o el móvil.
+desplegado con **GitHub Actions** (`.github/workflows/deploy.yml` hace
+`wrangler deploy` solo en cuanto haces commit de `src/**`, `wrangler.toml` o
+`package.json` en `main`), y todo administrable desde el navegador o el
+móvil — nada de CLI ni entorno local. Se dejó de usar la integración nativa
+"Connect to Git" de Cloudflare porque se desconectaba sola repetidamente.
 
 ## De dónde salen los datos
 
@@ -40,8 +43,17 @@ todo administrable desde el navegador o el móvil.
   determinista, byte a byte), este scraper analiza texto libre y es
   **heurístico** — puede perderse algún evento si Serebii cambia de
   maquetación. Tiene una red de seguridad que evita sobrescribir los datos
-  si el resultado parece sospechosamente bajo, pero conviene revisar a ojo
-  unos cuantos eventos después de la primera ejecución real.
+  si el resultado parece sospechosamente bajo. Validado contra el HTML real
+  de las dos páginas de origen (no solo con HTML de muestra), incluyendo
+  casos raros como fechas sin año de fin (se tratan como evento de un solo
+  día, nunca como "activo para siempre") y una errata real de Serebii
+  ("Janaury" en vez de "January").
+  - Los títulos oficiales conocidos se traducen al español al generar los
+    datos (`titleEs`): los Tera Raid "Mighty X" → **"X el Imbatible"**, y
+    "Shiny X" → **"X variocolor"** (términos oficiales de los juegos
+    localizados). El resto de títulos (descripciones propias de Serebii sin
+    nombre oficial en español, tipo "Finale" o "Raid Worthy Pokémon") se
+    quedan en inglés antes que inventarse una traducción.
 
 ## Cómo funciona
 
@@ -88,11 +100,24 @@ tal cual ("Add file → Upload files" en la web de GitHub).
 
 Habla con **@BotFather** → `/newbot` → guarda el **token** que te da.
 
-### 3. Crea el Worker en Cloudflare, conectado a tu repo
+### 3. Crea el Worker en Cloudflare y despliega por GitHub Actions
 
-Cloudflare dashboard → **Workers & Pages → Create → Import a repository** →
-elige tu repo. Detecta `wrangler.toml` y hace `npm install` + `wrangler
-deploy` solo en cada push.
+Crea el Worker vacío desde el dashboard de Cloudflare (**Workers & Pages →
+Create → Deploy manually / Start from Hello World**, con el nombre
+`pokemon-distro-bot` para que coincida con `wrangler.toml`), y luego deja
+que sea `.github/workflows/deploy.yml` quien lo suba en cada commit — no
+uses "Connect to Git" de Cloudflare, se ha desconectado solo varias veces.
+
+En **Repo → Settings → Secrets and variables → Actions** añade:
+
+| Nombre | Tipo | Valor |
+|---|---|---|
+| `CLOUDFLARE_API_TOKEN` | Secret | token creado en Cloudflare con la plantilla "Edit Cloudflare Workers" |
+| `CLOUDFLARE_ACCOUNT_ID` | Secret | tu Account ID (lo ves en el dashboard de Cloudflare, barra lateral) |
+
+Con eso, cada vez que toques `src/`, `wrangler.toml` o `package.json` y
+hagas commit a `main`, el Action despliega solo. También puedes lanzarlo a
+mano desde **Actions → "Desplegar el Worker" → Run workflow**.
 
 ### 4. Crea el namespace de KV y enlázalo
 
@@ -150,10 +175,14 @@ algo genuinamente nuevo.
 
 ### 8. (Opcional) refresco instantáneo
 
-Si no haces nada, el Worker se sincroniza solo (su propio cron semanal). Si
-quieres que se entere al instante de cada actualización del Action:
+Si no haces nada, el Worker se sincroniza solo (su propio cron semanal).
+Dos formas de que se entere al instante en vez de esperar:
 
-- Repo → **Settings → Secrets and variables → Actions**:
+- **Lo más simple, desde el móvil**: mándale `/refresh` al bot por
+  Telegram (solo funciona si eres `OWNER_CHAT_ID`) justo después de que
+  termine el workflow "Actualizar distribuciones".
+- **Automático**, para que el propio Action lo dispare sin que tengas que
+  acordarte: Repo → **Settings → Secrets and variables → Actions**:
   - Variable `CLOUDFLARE_REFRESH_URL` = `https://<TU-WORKER>.workers.dev/refresh`
   - Secret `REFRESH_SECRET` = el mismo valor que en el Worker.
 
@@ -166,10 +195,11 @@ y coge el id que aparece en el histórico para probar `/wondercard <id>`.
 
 - Escribir el nombre de un Pokémon (o `/pokemon <nombre>`, en español o
   inglés) → si tiene una distribución o evento activo ahora mismo, te lo
-  muestra; si no, te ofrece un botón **"Ver distribuciones anteriores"**
-  que despliega el histórico completo agrupado por consola (de la más
-  reciente a la más antigua), con el estado de HOME resumido una vez por
-  grupo en vez de repetido en cada línea.
+  muestra; si no, te ofrece un botón **"📜 Ver distribuciones anteriores"**
+  (con un **"✖️ Cancelar"** justo debajo, por si no quieres desplegarlo) que
+  abre el histórico completo agrupado por consola (de la más reciente a la
+  más antigua), con el estado de HOME resumido una vez por grupo en vez de
+  repetido en cada línea.
 - `/wondercard <id>` → te manda el archivo real de esa distribución como
   documento de Telegram (para abrir con PKHeX u otras herramientas). El
   archivo se pide al momento a GitHub, no se guarda copia en el bot.
@@ -178,7 +208,13 @@ y coge el id que aparece en el histórico para probar `/wondercard <id>`.
 - `/activas` / `/proximas` → distribuciones Mystery Gift del juego actual,
   abiertas ahora mismo o anunciadas sin empezar.
 - `/eventosactivos` / `/eventosproximos` → lo mismo pero para eventos
-  in-game (raids, etc.).
+  in-game (raids, etc.), **agrupados por juego** (🎮 Escarlata/Púrpura,
+  🎮 Espada/Escudo...) de la generación más reciente a la más antigua, en
+  vez de una lista única mezclada.
+- `/refresh` (solo para `OWNER_CHAT_ID`) → recarga los 3 datasets desde
+  GitHub al instante, sin esperar al cron semanal. Útil justo después de
+  relanzar el workflow "Actualizar distribuciones" para no tener que
+  esperar a que el bot se sincronice solo.
 - `/alertas on` / `/alertas off` → activa o desactiva, **para ti**, que el
   bot te escriba solo en cuanto detecte una distribución o evento nuevo.
   Cada aviso trae tres botones:
@@ -229,12 +265,21 @@ EG_LOCAL_PATH=/ruta/a/tu/copia/de/EventsGallery node scripts/fetch-eventsgallery
 
 ## Límites conocidos / posibles mejoras futuras
 
+- **`fetch-distributions.mjs` (Bulbapedia) falla con `HTTP 403` al
+  ejecutarse desde GitHub Actions**, ya con reintentos y una User-Agent
+  conforme a la política de Wikimedia — todo apunta a un bloqueo por rango
+  de IP de los runners de GitHub, no a la User-Agent en sí. `data/events.json`
+  (Serebii) no se ve afectado, así que la parte de "activo ahora mismo"
+  (`/activas`, `/proximas`) puede quedarse desactualizada hasta que se
+  resuelva esto; el histórico completo (`eventsgallery.json`) no depende de
+  Bulbapedia. Pendiente de probar `Special:Export` como alternativa a
+  `api.php`.
 - **`fetch-events.mjs` es heurístico**, a diferencia del resto del proyecto
   (que lee binarios exactos o tablas HTML estructuradas). Analiza texto
   libre de Serebii buscando patrones de fecha y negrita; puede perderse
-  algún evento suelto o interpretar mal una fecha rara. Revísalo a ojo tras
-  la primera ejecución real, y si algo falla claramente, dilo — es la parte
-  menos probada del proyecto.
+  algún evento suelto o interpretar mal una fecha rara. Validado contra el
+  HTML real de las dos páginas de origen, pero si Serebii cambia de
+  maquetación puede volver a romperse — si algo falla claramente, dilo.
 - Los avisos proactivos solo cubren distribuciones/eventos **activos o
   anunciados** en el momento del refresco; algo que aparezca y desaparezca
   entre dos refrescos semanales (poco probable) no generaría aviso.
