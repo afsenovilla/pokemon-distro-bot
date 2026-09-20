@@ -43,7 +43,7 @@ export function statusLabel(status) {
   return STATUS_LABEL[status] || STATUS_LABEL.desconocido;
 }
 
-function dateRange(entry) {
+export function dateRange(entry) {
   const start = formatDate(entry.dateStart);
   const end = formatDate(entry.dateEnd);
   if (start && end) return `${start} – ${end}`;
@@ -151,6 +151,143 @@ export function formatGalleryEntry(entry, { showSpecies = false } = {}) {
   if (home) lines.push(`${home.icon} <b>HOME:</b> ${home.text}`);
   lines.push(`📥 Descargar wondercard: <code>/wondercard ${escapeHtml(entry.id)}</code>`);
   return lines.join("\n");
+}
+
+/** Hash corto (8 hex) para usar como callback_data de Telegram en vez del
+ * id completo de una distribución/evento, que puede superar los 64 bytes
+ * que permite Telegram. No es criptográfico, solo necesita no colisionar
+ * dentro de un catálogo de unos pocos miles de entradas. */
+export function shortHash(str) {
+  let h = 0x811c9dc5;
+  const s = String(str || "");
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(16).padStart(8, "0");
+}
+
+/** A qué consola pertenece una entrada del historial (data/eventsgallery.json),
+ * usando la generación y, para los casos ambiguos (Gen 1/2 cartucho vs
+ * Virtual Console, Gen 7 3DS vs Switch), la carpeta de origen — mismo criterio
+ * que homeStatus(). */
+export function consoleLabel(entry) {
+  const gen = entry.generation;
+  const filePath = entry.representativeFile || "";
+  if (gen === 1 || gen === 2) {
+    return /\/Classic\//i.test(filePath)
+      ? "Game Boy / Game Boy Color (cartucho original)"
+      : "Nintendo 3DS (Virtual Console)";
+  }
+  if (gen === 3) return "Game Boy Advance";
+  if (gen === 4 || gen === 5) return "Nintendo DS";
+  if (gen === 6) return "Nintendo 3DS";
+  if (gen === 7) {
+    return /\/Switch\//i.test(filePath)
+      ? "Nintendo Switch (Let's Go Pikachu/Eevee)"
+      : "Nintendo 3DS";
+  }
+  if (gen === 8 || gen === 9) return "Nintendo Switch";
+  return "Consola desconocida";
+}
+
+const CONSOLE_ORDER = [
+  "Nintendo Switch",
+  "Nintendo Switch (Let's Go Pikachu/Eevee)",
+  "Nintendo 3DS",
+  "Nintendo 3DS (Virtual Console)",
+  "Nintendo DS",
+  "Game Boy Advance",
+  "Game Boy / Game Boy Color (cartucho original)",
+  "Consola desconocida",
+];
+
+/** Agrupa entradas del historial por consola, de la más reciente a la más
+ * antigua (y dentro de cada grupo, también por generación descendente). */
+export function groupByConsole(entries) {
+  const groups = new Map();
+  for (const e of entries) {
+    const label = consoleLabel(e);
+    if (!groups.has(label)) groups.set(label, []);
+    groups.get(label).push(e);
+  }
+  const sortedLabels = [...groups.keys()].sort((a, b) => {
+    const ia = CONSOLE_ORDER.indexOf(a);
+    const ib = CONSOLE_ORDER.indexOf(b);
+    return (ia === -1 ? CONSOLE_ORDER.length : ia) - (ib === -1 ? CONSOLE_ORDER.length : ib);
+  });
+  return sortedLabels.map((label) => ({
+    label,
+    entries: [...groups.get(label)].sort((a, b) => (b.generation ?? 0) - (a.generation ?? 0)),
+  }));
+}
+
+const SHINY_ICON = { always: "✨", never: "", random: "🎲", desconocido: "❔" };
+
+/** Una línea compacta por distribución (en vez del bloque largo de
+ * formatGalleryEntry), pensada para listar muchas a la vez sin generar un
+ * chorreo interminable. */
+export function formatCompactGalleryLine(entry) {
+  const icon = SHINY_ICON[entry.shiny] ?? "";
+  const game = entry.game || entry.gameCode || "juego no identificado";
+  const event = entry.event ? ` (${entry.event})` : "";
+  return `• ${escapeHtml(game)}${escapeHtml(event)}${icon ? ` ${icon}` : ""} — <code>/wondercard ${escapeHtml(entry.id)}</code>`;
+}
+
+/** Vista compacta del histórico completo de un Pokémon, agrupada por
+ * consola (más reciente primero), con el estado de HOME resumido una sola
+ * vez por grupo en vez de repetido en cada línea. */
+export function formatHistoryByConsole(speciesLabel, entries) {
+  if (entries.length === 0) {
+    return `No tengo ningún registro de distribuciones de <b>${escapeHtml(speciesLabel)}</b>.`;
+  }
+  const groups = groupByConsole(entries);
+  const lines = [`<b>${escapeHtml(speciesLabel)}</b> — histórico completo (${entries.length})`, ""];
+  for (const group of groups) {
+    lines.push(`🕹️ <b>${escapeHtml(group.label)}</b>`);
+    const home = homeStatus(group.entries[0]);
+    if (home) lines.push(`${home.icon} ${home.text}`);
+    for (const e of group.entries) lines.push(formatCompactGalleryLine(e));
+    lines.push("");
+  }
+  return lines.join("\n").trim();
+}
+
+const EVENT_SHINY_TEXT = {
+  possible: "✨ Shiny posible durante el evento",
+  none: "Shiny no disponible en este evento",
+  desconocido: "❔ Sin confirmar si hay shiny",
+};
+
+/** Formatea una entrada de data/events.json (eventos in-game: raids, etc.,
+ * NO Mystery Gift). */
+export function formatEventEntry(entry, { showTitle = true } = {}) {
+  const status = computeStatus(entry, new Date().toISOString().slice(0, 10));
+  const lines = [];
+  if (showTitle) {
+    lines.push(`<b>${escapeHtml(entry.title)}</b> — ${escapeHtml(entry.game || "Juego no especificado")}`);
+  }
+  lines.push(`📅 ${dateRange(entry)} · ${statusLabel(status)}`);
+  if (entry.pokemonLabel) lines.push(`🎯 ${escapeHtml(entry.pokemonLabel)}`);
+  lines.push(EVENT_SHINY_TEXT[entry.shiny] || EVENT_SHINY_TEXT.desconocido);
+  if (entry.sourceUrl) lines.push(`🔗 <a href="${escapeHtml(entry.sourceUrl)}">Más info</a>`);
+  return lines.join("\n");
+}
+
+/** Distribuciones Mystery Gift activas ahora mismo (data/distributions.json)
+ * para un dexNumber concreto. */
+export function findActiveDistributionsForDex(distEntries, dexNumber, today = new Date().toISOString().slice(0, 10)) {
+  return distEntries.filter(
+    (e) => e.dexNumber === dexNumber && computeStatus(e, today) === "activa"
+  );
+}
+
+/** Eventos in-game activos ahora mismo (data/events.json) para un dexNumber
+ * concreto (un evento puede afectar a varios Pokémon a la vez). */
+export function findActiveEventsForDex(eventEntries, dexNumber, today = new Date().toISOString().slice(0, 10)) {
+  return eventEntries.filter(
+    (e) => Array.isArray(e.dexNumbers) && e.dexNumbers.includes(dexNumber) && computeStatus(e, today) === "activa"
+  );
 }
 
 export function searchSpeciesIn(entries, query, speciesField = "species") {

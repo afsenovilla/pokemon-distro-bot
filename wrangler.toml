@@ -12,11 +12,15 @@ crons = ["0 6 * * 1"]
 [vars]
 GITHUB_DATA_URL = "https://raw.githubusercontent.com/afsenovilla/pokemon-distro-bot/main/data/distributions.json"
 GITHUB_GALLERY_URL = "https://raw.githubusercontent.com/afsenovilla/pokemon-distro-bot/main/data/eventsgallery.json"
+GITHUB_EVENTS_URL = "https://raw.githubusercontent.com/afsenovilla/pokemon-distro-bot/main/data/events.json"
 BOT_NAME = "Pokémon Distribuciones Bot"
 
 # Repo público de Poketracker a cruzar en /faltan ("usuario/repo"). Déjalo
 # vacío ("") si no quieres esta función.
 POKETRACKER_REPO = "afsenovilla/poketracker"
+
+# Tu chat_id de Telegram (@userinfobot te lo da). Solo tú puedes usar /faltan.
+OWNER_CHAT_ID = "243435"
 
 # Crea el namespace de KV desde el dashboard de Cloudflare (Workers & Pages
 # -> KV) y sustituye "id" por el que te den. Sirve como caché rápida de las

@@ -7,7 +7,8 @@
   "scripts": {
     "update-status": "node scripts/fetch-distributions.mjs",
     "update-gallery": "node scripts/fetch-eventsgallery.mjs",
-    "test": "node scripts/test-lib.mjs && node scripts/test-parser.mjs && node scripts/test-poketracker.mjs",
+    "update-events": "node scripts/fetch-events.mjs",
+    "test": "node scripts/test-lib.mjs && node scripts/test-parser.mjs && node scripts/test-poketracker.mjs && node scripts/test-state.mjs && node scripts/test-events.mjs",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"
   },

@@ -2,17 +2,38 @@ import {
   computeStatus,
   formatStatusEntry,
   formatGalleryEntry,
+  formatEventEntry,
+  formatHistoryByConsole,
+  findActiveDistributionsForDex,
+  findActiveEventsForDex,
   searchGallery,
   escapeHtml,
+  shortHash,
   daysUntilBankClosure,
   BANK_CLOSURE_LABEL,
 } from "./lib.js";
 import { fetchPoketrackerData, buildFaltanReport, formatFaltanReport } from "./poketracker.js";
+import {
+  getUserState,
+  saveUserState,
+  getSubscribers,
+  ensureSubscribed,
+  applyItemAction,
+  setAlertsEnabled,
+  isSuppressed,
+} from "./state.js";
 
-const KV_KEY_STATUS = "distributions"; // data/distributions.json (activas/anunciadas, juego actual)
+const KV_KEY_STATUS = "distributions"; // data/distributions.json (Mystery Gift activa/anunciada, juego actual)
 const KV_KEY_GALLERY = "eventsgallery"; // data/eventsgallery.json (historial completo + shiny verificado)
+const KV_KEY_EVENTS = "events"; // data/events.json (eventos in-game: raids, etc. — no Mystery Gift, no Pokémon GO)
+const KV_KEY_IDMAP = "idmap"; // hash corto -> "d:<id>" | "e:<id>", para los botones inline
+const KV_KEY_SEEN = "seen"; // últimos ids de distribuciones/eventos activos o anunciados vistos
 
 const EVENTSGALLERY_RAW_BASE = "https://raw.githubusercontent.com/projectpokemon/EventsGallery/master/";
+
+function todayIso() {
+  return new Date().toISOString().slice(0, 10);
+}
 
 function buildHelpText(env, chatId) {
   const owner = env.OWNER_CHAT_ID;
@@ -21,17 +42,20 @@ function buildHelpText(env, chatId) {
     ? "\n• /faltan — cruce con la Living Dex de Poketracker: qué se queda atrapado si no se mueve a HOME a tiempo, y qué shiny garantizados faltan por conseguir"
     : "";
   return `<b>Pokémon Distribuciones Bot</b>
-Te digo en qué juegos se ha distribuido un Pokémon a lo largo de TODA la historia de Mystery Gift, si era shiny (comprobado leyendo la wondercard real, no adivinado), y te dejo descargarte esa wondercard. También sé qué distribuciones del juego actual están activas o anunciadas.
+Distribuciones (Mystery Gift) y eventos in-game (raids, etc. — no Pokémon GO) de todos los juegos principales de Pokémon.
 
 <b>Comandos</b>
-- Escribe el nombre de un Pokémon (o usa /pokemon nombre) — p. ej. <code>mew</code> (cada resultado indica si puede llegar a Pokémon HOME o si depende de Pokémon Bank)
-- /wondercard &lt;id&gt; — descarga el archivo real de una distribución (el id sale debajo de cada resultado)
-- /home — recordatorio del cierre de Pokémon Bank y qué juegos se ven afectados
-- /activas — distribuciones del juego actual activas ahora
-- /proximas — distribuciones del juego actual anunciadas que aún no han empezado${faltanLine}
-- /ayuda — este mensaje
+• Escribe el nombre de un Pokémon (o usa /pokemon nombre) — te digo si tiene algo activo ahora mismo (distribución o evento); si no, te dejo ver el histórico completo con un botón, agrupado por consola
+• /wondercard &lt;id&gt; — descarga el archivo real de una distribución (el id sale en el histórico)
+• /home — recordatorio del cierre de Pokémon Bank y qué juegos se ven afectados
+• /activas — distribuciones Mystery Gift activas ahora
+• /proximas — distribuciones Mystery Gift anunciadas que aún no han empezado
+• /eventosactivos — eventos in-game (raids, etc.) activos ahora
+• /eventosproximos — eventos in-game anunciados que aún no han empezado
+• /alertas on|off — avisarte (o no) en cuanto detecte una distribución o evento nuevo, con botones para posponerlo, marcarlo hecho o silenciarlo${faltanLine}
+• /ayuda — este mensaje
 
-Fuente del historial: <a href="https://github.com/projectpokemon/EventsGallery">projectpokemon/EventsGallery</a> (el mismo archivo que usa PKHeX para legalidad), actualizado cada semana.`;
+Fuentes: <a href="https://github.com/projectpokemon/EventsGallery">projectpokemon/EventsGallery</a> (historial de Mystery Gift) y Serebii.net (eventos in-game), actualizado cada semana.`;
 }
 
 async function telegramApi(env, method, payload) {
@@ -46,7 +70,7 @@ async function telegramApi(env, method, payload) {
   return res;
 }
 
-function sendMessage(env, chatId, text) {
+function sendMessage(env, chatId, text, keyboard) {
   const chunks = [];
   let rest = text;
   while (rest.length > 4000) {
@@ -57,15 +81,43 @@ function sendMessage(env, chatId, text) {
   }
   chunks.push(rest);
   return Promise.all(
-    chunks.map((chunk) =>
+    chunks.map((chunk, i) =>
       telegramApi(env, "sendMessage", {
         chat_id: chatId,
         text: chunk,
         parse_mode: "HTML",
         disable_web_page_preview: true,
+        // el teclado solo va en el último trozo, si lo hay
+        ...(keyboard && i === chunks.length - 1 ? { reply_markup: keyboard } : {}),
       })
     )
   );
+}
+
+async function editMessageText(env, chatId, messageId, text, keyboard) {
+  return telegramApi(env, "editMessageText", {
+    chat_id: chatId,
+    message_id: messageId,
+    text,
+    parse_mode: "HTML",
+    disable_web_page_preview: true,
+    ...(keyboard !== undefined ? { reply_markup: keyboard || { inline_keyboard: [] } } : {}),
+  });
+}
+
+async function editMessageReplyMarkup(env, chatId, messageId, keyboard) {
+  return telegramApi(env, "editMessageReplyMarkup", {
+    chat_id: chatId,
+    message_id: messageId,
+    reply_markup: keyboard || { inline_keyboard: [] },
+  });
+}
+
+async function answerCallbackQuery(env, callbackQueryId, text) {
+  return telegramApi(env, "answerCallbackQuery", {
+    callback_query_id: callbackQueryId,
+    ...(text ? { text, show_alert: false } : {}),
+  });
 }
 
 async function sendDocument(env, chatId, blob, filename, caption) {
@@ -83,39 +135,82 @@ async function sendDocument(env, chatId, blob, filename, caption) {
   return res;
 }
 
-async function getStatusDataset(env) {
-  const raw = await env.DISTRO_KV.get(KV_KEY_STATUS);
+// --- Datasets en KV ---
+
+async function getJsonDataset(env, key) {
+  const raw = await env.DISTRO_KV.get(key);
   if (!raw) return { generatedAt: null, entries: [] };
   try {
     return JSON.parse(raw);
   } catch {
     return { generatedAt: null, entries: [] };
+  }
+}
+const getStatusDataset = (env) => getJsonDataset(env, KV_KEY_STATUS);
+const getGalleryDataset = (env) => getJsonDataset(env, KV_KEY_GALLERY);
+const getEventsDataset = (env) => getJsonDataset(env, KV_KEY_EVENTS);
+
+async function getIdMap(env) {
+  const raw = await env.DISTRO_KV.get(KV_KEY_IDMAP);
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return {};
   }
 }
 
-async function getGalleryDataset(env) {
-  const raw = await env.DISTRO_KV.get(KV_KEY_GALLERY);
-  if (!raw) return { generatedAt: null, entries: [] };
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return { generatedAt: null, entries: [] };
-  }
+// --- Teclados inline ---
+
+function actionKeyboard(hash, doneLabel) {
+  return {
+    inline_keyboard: [
+      [{ text: `✅ ${doneLabel}`, callback_data: `dn:${hash}` }],
+      [
+        { text: "⏰ Posponer", callback_data: `sn:${hash}` },
+        { text: "🔕 No me interesa", callback_data: `mu:${hash}` },
+      ],
+    ],
+  };
 }
+
+function snoozeKeyboard(hash) {
+  const days = [1, 2, 3, 5, 7];
+  return {
+    inline_keyboard: [
+      days.map((d) => ({ text: `${d}d`, callback_data: `sd:${hash}:${d}` })),
+      [{ text: "‹ Atrás", callback_data: `bk:${hash}` }],
+    ],
+  };
+}
+
+function historyKeyboard(dexNumber) {
+  return { inline_keyboard: [[{ text: "📜 Ver distribuciones anteriores", callback_data: `hi:${dexNumber}` }]] };
+}
+
+// --- Refresco de datos + detección de novedades ---
 
 async function refreshData(env) {
-  const [statusRes, galleryRes] = await Promise.all([
+  const fetches = [
     fetch(env.GITHUB_DATA_URL, { headers: { "cache-control": "no-cache" } }),
     fetch(env.GITHUB_GALLERY_URL, { headers: { "cache-control": "no-cache" } }),
-  ]);
+    env.GITHUB_EVENTS_URL
+      ? fetch(env.GITHUB_EVENTS_URL, { headers: { "cache-control": "no-cache" } })
+      : Promise.resolve(null),
+  ];
+  const [statusRes, galleryRes, eventsRes] = await Promise.all(fetches);
   const results = {};
+  let statusJson = null;
+  let eventsJson = null;
+
   if (statusRes.ok) {
-    const json = await statusRes.json();
-    await env.DISTRO_KV.put(KV_KEY_STATUS, JSON.stringify(json));
-    results.status = json.entries?.length ?? 0;
+    statusJson = await statusRes.json();
+    await env.DISTRO_KV.put(KV_KEY_STATUS, JSON.stringify(statusJson));
+    results.status = statusJson.entries?.length ?? 0;
   } else {
     console.error(`No se pudo descargar distributions.json: HTTP ${statusRes.status}`);
   }
+
   if (galleryRes.ok) {
     const json = await galleryRes.json();
     await env.DISTRO_KV.put(KV_KEY_GALLERY, JSON.stringify(json));
@@ -123,8 +218,88 @@ async function refreshData(env) {
   } else {
     console.error(`No se pudo descargar eventsgallery.json: HTTP ${galleryRes.status}`);
   }
+
+  if (eventsRes) {
+    if (eventsRes.ok) {
+      eventsJson = await eventsRes.json();
+      await env.DISTRO_KV.put(KV_KEY_EVENTS, JSON.stringify(eventsJson));
+      results.events = eventsJson.entries?.length ?? 0;
+    } else {
+      console.error(`No se pudo descargar events.json: HTTP ${eventsRes.status}`);
+    }
+  }
+
+  await rebuildIdMapAndNotify(env, statusJson, eventsJson);
+
   return results;
 }
+
+/** Reconstruye el mapa hash->id (para los botones) y compara contra la
+ * última foto guardada para avisar a los suscriptores de lo genuinamente
+ * nuevo. La primera vez que se ejecuta (no hay "seen" todavía) solo guarda
+ * la foto actual sin avisar a nadie — si no, el primer despliegue de esta
+ * función mandaría un aviso por cada distribución/evento activo o
+ * anunciado que ya existiera. */
+async function rebuildIdMapAndNotify(env, statusJson, eventsJson) {
+  const today = todayIso();
+  const relevantDist = (statusJson?.entries || []).filter((e) =>
+    ["activa", "anunciada"].includes(computeStatus(e, today))
+  );
+  const relevantEvents = (eventsJson?.entries || []).filter((e) =>
+    ["activa", "anunciada"].includes(computeStatus(e, today))
+  );
+
+  const idmap = {};
+  for (const e of relevantDist) idmap[shortHash(`d:${e.id}`)] = `d:${e.id}`;
+  for (const e of relevantEvents) idmap[shortHash(`e:${e.id}`)] = `e:${e.id}`;
+  await env.DISTRO_KV.put(KV_KEY_IDMAP, JSON.stringify(idmap));
+
+  const seenRaw = await env.DISTRO_KV.get(KV_KEY_SEEN);
+  const seen = seenRaw ? JSON.parse(seenRaw) : null;
+
+  if (seen) {
+    const newDist = relevantDist.filter((e) => !seen.distributions?.includes(e.id));
+    const newEvents = relevantEvents.filter((e) => !seen.events?.includes(e.id));
+    if (newDist.length > 0 || newEvents.length > 0) {
+      await notifySubscribers(env, newDist, newEvents);
+    }
+  }
+
+  await env.DISTRO_KV.put(
+    KV_KEY_SEEN,
+    JSON.stringify({ distributions: relevantDist.map((e) => e.id), events: relevantEvents.map((e) => e.id) })
+  );
+}
+
+async function notifySubscribers(env, newDist, newEvents) {
+  const subs = await getSubscribers(env);
+  for (const chatId of subs) {
+    let state;
+    try {
+      state = await getUserState(env, chatId);
+    } catch {
+      continue;
+    }
+    if (!state.alertsEnabled) continue;
+
+    for (const e of newDist) {
+      const key = `d:${e.id}`;
+      if (isSuppressed(state, key)) continue;
+      const hash = shortHash(key);
+      const text = `🆕 <b>Nueva distribución</b>\n\n${formatStatusEntry(e, { showSpecies: true })}`;
+      await sendMessage(env, chatId, text, actionKeyboard(hash, "Ya la tengo / canjeada"));
+    }
+    for (const e of newEvents) {
+      const key = `e:${e.id}`;
+      if (isSuppressed(state, key)) continue;
+      const hash = shortHash(key);
+      const text = `🆕 <b>Nuevo evento</b>\n\n${formatEventEntry(e)}`;
+      await sendMessage(env, chatId, text, actionKeyboard(hash, "Completado"));
+    }
+  }
+}
+
+// --- Rate limit ---
 
 async function isRateLimited(env, chatId) {
   const key = `rl:${chatId}`;
@@ -137,9 +312,7 @@ async function isRateLimited(env, chatId) {
   return false;
 }
 
-function todayIso() {
-  return new Date().toISOString().slice(0, 10);
-}
+// --- Handlers de comandos ---
 
 async function handleActivas(env, chatId) {
   const { entries } = await getStatusDataset(env);
@@ -148,20 +321,14 @@ async function handleActivas(env, chatId) {
     .sort((a, b) => (a.dateEnd || "9999").localeCompare(b.dateEnd || "9999"));
 
   if (activas.length === 0) {
-    await sendMessage(
-      env,
-      chatId,
-      "No tengo ninguna distribución del juego actual marcada como activa ahora mismo. Prueba con /proximas."
-    );
+    await sendMessage(env, chatId, "No tengo ninguna distribución Mystery Gift marcada como activa ahora mismo. Prueba con /proximas.");
     return;
   }
-
   const LIMIT = 15;
   const shown = activas.slice(0, LIMIT);
   const body = shown.map((e) => formatStatusEntry(e, { showSpecies: true })).join("\n\n");
   const header = `<b>Distribuciones activas ahora (${activas.length})</b>\n\n`;
-  const footer =
-    activas.length > LIMIT ? `\n\n… y ${activas.length - LIMIT} más.` : "";
+  const footer = activas.length > LIMIT ? `\n\n… y ${activas.length - LIMIT} más.` : "";
   await sendMessage(env, chatId, header + body + footer);
 }
 
@@ -172,14 +339,9 @@ async function handleProximas(env, chatId) {
     .sort((a, b) => (a.dateStart || "9999").localeCompare(b.dateStart || "9999"));
 
   if (proximas.length === 0) {
-    await sendMessage(
-      env,
-      chatId,
-      "No tengo ninguna distribución del juego actual anunciada todavía sin empezar. Prueba con /activas."
-    );
+    await sendMessage(env, chatId, "No tengo ninguna distribución Mystery Gift anunciada todavía sin empezar. Prueba con /activas.");
     return;
   }
-
   const LIMIT = 15;
   const shown = proximas.slice(0, LIMIT);
   const body = shown.map((e) => formatStatusEntry(e, { showSpecies: true })).join("\n\n");
@@ -188,30 +350,59 @@ async function handleProximas(env, chatId) {
   await sendMessage(env, chatId, header + body + footer);
 }
 
+async function handleEventosActivos(env, chatId) {
+  const { entries } = await getEventsDataset(env);
+  const activos = entries
+    .filter((e) => computeStatus(e, todayIso()) === "activa")
+    .sort((a, b) => (a.dateEnd || "9999").localeCompare(b.dateEnd || "9999"));
+
+  if (activos.length === 0) {
+    await sendMessage(env, chatId, "No tengo ningún evento in-game marcado como activo ahora mismo. Prueba con /eventosproximos.");
+    return;
+  }
+  const LIMIT = 15;
+  const shown = activos.slice(0, LIMIT);
+  const body = shown.map((e) => formatEventEntry(e)).join("\n\n");
+  const header = `<b>Eventos in-game activos ahora (${activos.length})</b>\n\n`;
+  const footer = activos.length > LIMIT ? `\n\n… y ${activos.length - LIMIT} más.` : "";
+  await sendMessage(env, chatId, header + body + footer);
+}
+
+async function handleEventosProximos(env, chatId) {
+  const { entries } = await getEventsDataset(env);
+  const proximos = entries
+    .filter((e) => computeStatus(e, todayIso()) === "anunciada")
+    .sort((a, b) => (a.dateStart || "9999").localeCompare(b.dateStart || "9999"));
+
+  if (proximos.length === 0) {
+    await sendMessage(env, chatId, "No tengo ningún evento in-game anunciado todavía sin empezar. Prueba con /eventosactivos.");
+    return;
+  }
+  const LIMIT = 15;
+  const shown = proximos.slice(0, LIMIT);
+  const body = shown.map((e) => formatEventEntry(e)).join("\n\n");
+  const header = `<b>Eventos in-game anunciados (${proximos.length})</b>\n\n`;
+  const footer = proximos.length > LIMIT ? `\n\n… y ${proximos.length - LIMIT} más.` : "";
+  await sendMessage(env, chatId, header + body + footer);
+}
+
 async function handleSearch(env, chatId, query) {
-  const { entries, generatedAt } = await getGalleryDataset(env);
+  const { entries: galleryEntries, generatedAt } = await getGalleryDataset(env);
   if (!generatedAt) {
-    await sendMessage(
-      env,
-      chatId,
-      "Todavía no tengo datos cargados (el bot acaba de desplegarse). Vuelve a intentarlo en unos minutos."
-    );
+    await sendMessage(env, chatId, "Todavía no tengo datos cargados (el bot acaba de desplegarse). Vuelve a intentarlo en unos minutos.");
     return;
   }
 
-  const { matches, entries: found } = searchGallery(entries, query);
+  const { matches, entries: found } = searchGallery(galleryEntries, query);
 
   if (matches.length === 0) {
     await sendMessage(
       env,
       chatId,
-      `No encuentro ninguna distribución de «${escapeHtml(
-        query
-      )}» en mis datos. Cubro los Pokémon que se han repartido alguna vez por Mystery Gift — si crees que debería estar, avisa a quien mantiene el bot.`
+      `No encuentro ninguna distribución de «${escapeHtml(query)}» en mis datos. Cubro los Pokémon que se han repartido alguna vez por Mystery Gift — si crees que debería estar, avisa a quien mantiene el bot.`
     );
     return;
   }
-
   if (matches.length > 1) {
     await sendMessage(
       env,
@@ -221,21 +412,47 @@ async function handleSearch(env, chatId, query) {
     return;
   }
 
-  const sorted = [...found].sort((a, b) => (b.generation ?? 0) - (a.generation ?? 0));
-  const LIMIT = 12;
-  const shown = sorted.slice(0, LIMIT);
-  const header = `<b>${escapeHtml(sorted[0]?.speciesEs || matches[0])}</b> — ${sorted.length} distribución(es) encontradas\n\n`;
-  const body = shown.map((e) => formatGalleryEntry(e)).join("\n\n");
-  const footer = sorted.length > LIMIT ? `\n\n… y ${sorted.length - LIMIT} más (sé más concreto o pide directamente el id si ya lo conoces).` : "";
-  await sendMessage(env, chatId, header + body + footer);
+  const dexNumber = found[0]?.dexNumber ?? null;
+  const speciesLabel = found[0]?.speciesEs || matches[0];
+
+  const [{ entries: distEntries }, { entries: eventEntries }] = await Promise.all([
+    getStatusDataset(env),
+    getEventsDataset(env),
+  ]);
+  const activeDist = dexNumber != null ? findActiveDistributionsForDex(distEntries, dexNumber) : [];
+  const activeEvents = dexNumber != null ? findActiveEventsForDex(eventEntries, dexNumber) : [];
+
+  const keyboard = dexNumber != null ? historyKeyboard(dexNumber) : undefined;
+
+  if (activeDist.length === 0 && activeEvents.length === 0) {
+    const text = `<b>${escapeHtml(speciesLabel)}</b>\nNo hay ninguna distribución ni evento activo ahora mismo. ¿Quieres revisar las distribuciones anteriores de este Pokémon?`;
+    await sendMessage(env, chatId, text, keyboard);
+    return;
+  }
+
+  const parts = [`<b>${escapeHtml(speciesLabel)}</b> — activo ahora mismo`, ""];
+  for (const e of activeDist) parts.push(formatStatusEntry(e), "");
+  for (const e of activeEvents) parts.push(formatEventEntry(e), "");
+  await sendMessage(env, chatId, parts.join("\n").trim(), keyboard);
+}
+
+async function handleHistoryCallback(env, chatId, messageId, dexNumber) {
+  const { entries } = await getGalleryDataset(env);
+  const speciesEntries = entries.filter((e) => e.dexNumber === dexNumber);
+  const speciesLabel = speciesEntries[0]?.speciesEs || speciesEntries[0]?.species || `#${dexNumber}`;
+  const text = formatHistoryByConsole(speciesLabel, speciesEntries);
+
+  if (text.length <= 3800) {
+    await editMessageText(env, chatId, messageId, text, null);
+  } else {
+    await editMessageReplyMarkup(env, chatId, messageId, null);
+    await sendMessage(env, chatId, text);
+  }
 }
 
 async function handleHome(env, chatId) {
   const days = daysUntilBankClosure();
-  const countdown =
-    days > 0
-      ? `Quedan <b>${days} días</b>.`
-      : `Ya ha cerrado.`;
+  const countdown = days > 0 ? `Quedan <b>${days} días</b>.` : `Ya ha cerrado.`;
   const text = `<b>Pokémon Bank ⇢ Pokémon HOME</b>
 Pokémon Bank deja de poder conectar con Pokémon HOME el <b>${BANK_CLOSURE_LABEL}</b>. ${countdown}
 
@@ -276,9 +493,34 @@ async function handleFaltan(env, chatId) {
   await sendMessage(env, chatId, formatFaltanReport(report));
 }
 
+async function handleAlertas(env, chatId, arg) {
+  const value = (arg || "").trim().toLowerCase();
+  if (value !== "on" && value !== "off") {
+    const state = await getUserState(env, chatId);
+    await sendMessage(
+      env,
+      chatId,
+      `Usa <code>/alertas on</code> o <code>/alertas off</code>. Ahora mismo están <b>${
+        state.alertsEnabled ? "activadas" : "desactivadas"
+      }</b> para ti.`
+    );
+    return;
+  }
+  let state = await getUserState(env, chatId);
+  state = setAlertsEnabled(state, value === "on");
+  await saveUserState(env, chatId, state);
+  await sendMessage(
+    env,
+    chatId,
+    value === "on"
+      ? "✅ Avisos activados. Te escribiré en cuanto detecte una distribución o evento nuevo, con botones para posponerlo, marcarlo hecho o silenciarlo."
+      : "🔕 Avisos desactivados. Puedes reactivarlos cuando quieras con /alertas on."
+  );
+}
+
 async function handleWondercard(env, chatId, id) {
   if (!id) {
-    await sendMessage(env, chatId, "Dime el id de la distribución, por ejemplo: <code>/wondercard mew-gen4-hgss-random</code> (el id sale debajo de cada resultado de búsqueda).");
+    await sendMessage(env, chatId, "Dime el id de la distribución, por ejemplo: <code>/wondercard mew-gen4-hgss-random</code> (el id sale en el histórico).");
     return;
   }
   const { entries } = await getGalleryDataset(env);
@@ -300,6 +542,80 @@ async function handleWondercard(env, chatId, id) {
   await sendDocument(env, chatId, blob, filename, caption);
 }
 
+// --- callback_query (botones) ---
+
+async function handleCallbackQuery(env, callbackQuery) {
+  const chatId = callbackQuery.message?.chat?.id;
+  const messageId = callbackQuery.message?.message_id;
+  const data = callbackQuery.data || "";
+  if (!chatId || !messageId) return;
+
+  await ensureSubscribed(env, chatId);
+  if (await isRateLimited(env, chatId)) {
+    await answerCallbackQuery(env, callbackQuery.id);
+    return;
+  }
+
+  const [action, ...rest] = data.split(":");
+
+  if (action === "hi") {
+    const dexNumber = Number(rest[0]);
+    await answerCallbackQuery(env, callbackQuery.id);
+    await handleHistoryCallback(env, chatId, messageId, dexNumber);
+    return;
+  }
+
+  const hash = rest[0];
+  const idmap = await getIdMap(env);
+  const key = idmap[hash];
+  if (!key) {
+    await answerCallbackQuery(env, callbackQuery.id, "Este botón ya ha caducado.");
+    return;
+  }
+  const isEvent = key.startsWith("e:");
+  const doneLabel = isEvent ? "Completado" : "Ya la tengo / canjeada";
+
+  if (action === "sn") {
+    await answerCallbackQuery(env, callbackQuery.id);
+    await editMessageReplyMarkup(env, chatId, messageId, snoozeKeyboard(hash));
+    return;
+  }
+  if (action === "bk") {
+    await answerCallbackQuery(env, callbackQuery.id);
+    await editMessageReplyMarkup(env, chatId, messageId, actionKeyboard(hash, doneLabel));
+    return;
+  }
+  if (action === "sd") {
+    const days = Number(rest[1]);
+    let state = await getUserState(env, chatId);
+    state = applyItemAction(state, key, "snooze", { days });
+    await saveUserState(env, chatId, state);
+    await answerCallbackQuery(env, callbackQuery.id, `Pospuesto ${days} día(s).`);
+    await editMessageReplyMarkup(env, chatId, messageId, null);
+    return;
+  }
+  if (action === "mu") {
+    let state = await getUserState(env, chatId);
+    state = applyItemAction(state, key, "mute");
+    await saveUserState(env, chatId, state);
+    await answerCallbackQuery(env, callbackQuery.id, "No volverás a ver avisos de esto.");
+    await editMessageReplyMarkup(env, chatId, messageId, null);
+    return;
+  }
+  if (action === "dn") {
+    let state = await getUserState(env, chatId);
+    state = applyItemAction(state, key, isEvent ? "complete" : "redeem");
+    await saveUserState(env, chatId, state);
+    await answerCallbackQuery(env, callbackQuery.id, isEvent ? "Marcado como completado." : "Marcada como canjeada.");
+    await editMessageReplyMarkup(env, chatId, messageId, null);
+    return;
+  }
+
+  await answerCallbackQuery(env, callbackQuery.id);
+}
+
+// --- Router principal ---
+
 function parseCommand(text) {
   const trimmed = (text || "").trim();
   if (!trimmed.startsWith("/")) return null;
@@ -309,11 +625,17 @@ function parseCommand(text) {
 }
 
 async function handleUpdate(env, update) {
+  if (update.callback_query) {
+    await handleCallbackQuery(env, update.callback_query);
+    return;
+  }
+
   const message = update.message || update.edited_message;
   if (!message || !message.text) return;
   const chatId = message.chat.id;
   const text = message.text;
 
+  await ensureSubscribed(env, chatId);
   if (await isRateLimited(env, chatId)) return;
 
   const command = parseCommand(text);
@@ -331,6 +653,15 @@ async function handleUpdate(env, update) {
       case "proximas":
       case "próximas":
         await handleProximas(env, chatId);
+        return;
+      case "eventosactivos":
+        await handleEventosActivos(env, chatId);
+        return;
+      case "eventosproximos":
+        await handleEventosProximos(env, chatId);
+        return;
+      case "alertas":
+        await handleAlertas(env, chatId, command.args);
         return;
       case "wondercard":
         await handleWondercard(env, chatId, command.args);
@@ -363,12 +694,17 @@ export default {
     const url = new URL(request.url);
 
     if (request.method === "GET" && url.pathname === "/health") {
-      const [status, gallery] = await Promise.all([getStatusDataset(env), getGalleryDataset(env)]);
+      const [status, gallery, events] = await Promise.all([
+        getStatusDataset(env),
+        getGalleryDataset(env),
+        getEventsDataset(env),
+      ]);
       return Response.json({
         ok: true,
         bot: env.BOT_NAME || "pokemon-distro-bot",
         status: { generatedAt: status.generatedAt, totalEntries: status.entries?.length ?? 0 },
         gallery: { generatedAt: gallery.generatedAt, totalEntries: gallery.entries?.length ?? 0 },
+        events: { generatedAt: events.generatedAt, totalEntries: events.entries?.length ?? 0 },
       });
     }
 

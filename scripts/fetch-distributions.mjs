@@ -14,12 +14,20 @@
  */
 
 import { load } from "cheerio";
-import { writeFile, mkdir } from "node:fs/promises";
+import { writeFile, mkdir, readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
+
+function findDexNumber(speciesName, speciesEntriesSorted) {
+  const target = speciesName.toLowerCase();
+  for (const [dex, name] of speciesEntriesSorted) {
+    if (target.includes(name.toLowerCase())) return Number(dex);
+  }
+  return null;
+}
 
 const API_BASE = "https://bulbapedia.bulbagarden.net/w/api.php";
 const USER_AGENT =
@@ -177,6 +185,11 @@ function dedupe(entries) {
 }
 
 async function main() {
+  const speciesNames = JSON.parse(
+    await readFile(path.join(__dirname, "resources", "species-names.json"), "utf8")
+  );
+  const speciesEntriesSorted = Object.entries(speciesNames.en).sort((a, b) => b[1].length - a[1].length);
+
   let all = [];
   const errors = [];
 
@@ -212,6 +225,7 @@ async function main() {
   const withIds = all.map((e) => ({
     id: slugifyId(`${e.species}-${e.game || ""}-${e.dateStart || Math.random()}`),
     ...e,
+    dexNumber: findDexNumber(e.species, speciesEntriesSorted),
     status: computeStatus(e, today),
   }));
 

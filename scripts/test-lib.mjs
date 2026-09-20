@@ -7,6 +7,14 @@ import {
   formatGalleryEntry,
   searchSpeciesIn,
   searchGallery,
+  shortHash,
+  consoleLabel,
+  groupByConsole,
+  formatCompactGalleryLine,
+  formatHistoryByConsole,
+  formatEventEntry,
+  findActiveDistributionsForDex,
+  findActiveEventsForDex,
 } from "../src/lib.js";
 
 assert.equal(normalize("Mewtwó"), "mewtwo");
@@ -76,5 +84,74 @@ assert.ok(galleryText.includes("siempre"));
 assert.ok(galleryText.includes("verificado leyendo la wondercard real"));
 assert.ok(galleryText.includes("/wondercard mew-gen4-hgss-always"));
 assert.ok(galleryText.includes("3 variantes"));
+
+// --- histórico agrupado por consola ---
+const historyEntries = [
+  { id: "mew-gen9-sv-random", species: "Mew", generation: 9, game: "Escarlata/Púrpura", shiny: "random" },
+  { id: "mew-gen4-hgss-always", species: "Mew", generation: 4, game: "Oro HeartGold/Plata SoulSilver", shiny: "always", event: "Anniversary Mew" },
+  { id: "mew-gen7-switch-lgpe-never", species: "Mew", generation: 7, game: "Let's Go Pikachu/Eevee", shiny: "never", representativeFile: "Released/Gen 7/Switch/foo.wc7full" },
+  { id: "mew-gen7-3ds-sm-random", species: "Mew", generation: 7, game: "Sol/Luna", shiny: "random", representativeFile: "Released/Gen 7/JPN/foo.wc7full" },
+];
+
+assert.equal(consoleLabel(historyEntries[0]), "Nintendo Switch");
+assert.equal(consoleLabel(historyEntries[1]), "Nintendo DS");
+assert.equal(consoleLabel(historyEntries[2]), "Nintendo Switch (Let's Go Pikachu/Eevee)");
+assert.equal(consoleLabel(historyEntries[3]), "Nintendo 3DS");
+
+const grouped = groupByConsole(historyEntries);
+// Switch (gen9) debe ir antes que Switch Let's Go, que va antes que 3DS, que
+// va antes que DS: de más reciente/relevante a más antiguo.
+assert.deepEqual(
+  grouped.map((g) => g.label),
+  ["Nintendo Switch", "Nintendo Switch (Let's Go Pikachu/Eevee)", "Nintendo 3DS", "Nintendo DS"]
+);
+
+const compactLine = formatCompactGalleryLine(historyEntries[1]);
+assert.ok(compactLine.includes("Anniversary Mew"));
+assert.ok(compactLine.includes("/wondercard mew-gen4-hgss-always"));
+assert.ok(compactLine.includes("✨"));
+
+const historyText = formatHistoryByConsole("Mew", historyEntries);
+assert.ok(historyText.includes("Mew"));
+assert.ok(historyText.includes("Nintendo Switch"));
+assert.ok(historyText.includes("Nintendo DS"));
+assert.equal(formatHistoryByConsole("Ditto", []), "No tengo ningún registro de distribuciones de <b>Ditto</b>.");
+
+// --- eventos in-game (data/events.json) ---
+const eventEntry = {
+  id: "swsh-finale",
+  game: "Espada/Escudo",
+  generation: 8,
+  title: "Finale",
+  dateStart: "2024-01-01",
+  dateEnd: "2024-01-10",
+  pokemonLabel: "Snorlax",
+  shiny: "possible",
+  sourceUrl: "https://www.serebii.net/swordshield/wildareaevents.shtml",
+};
+assert.equal(computeStatus(eventEntry, "2024-01-05"), "activa");
+const eventText = formatEventEntry(eventEntry);
+assert.ok(eventText.includes("Finale"));
+assert.ok(eventText.includes("Snorlax"));
+assert.ok(eventText.includes("Shiny posible"));
+
+const distEntries = [
+  { species: "Mew", dexNumber: 151, dateStart: "2024-01-01", dateEnd: "2024-01-10" },
+  { species: "Pikachu", dexNumber: 25, dateStart: "2020-01-01", dateEnd: "2020-01-10" },
+];
+assert.equal(findActiveDistributionsForDex(distEntries, 151, "2024-01-05").length, 1);
+assert.equal(findActiveDistributionsForDex(distEntries, 25, "2024-01-05").length, 0); // finalizada
+
+const eventEntries = [
+  { ...eventEntry, dexNumbers: [143] },
+  { ...eventEntry, id: "old", dateStart: "2019-01-01", dateEnd: "2019-01-10", dexNumbers: [143] },
+];
+assert.equal(findActiveEventsForDex(eventEntries, 143, "2024-01-05").length, 1);
+assert.equal(findActiveEventsForDex(eventEntries, 999, "2024-01-05").length, 0);
+
+// --- shortHash ---
+assert.equal(shortHash("mew-gen4-hgss-always").length, 8);
+assert.equal(shortHash("a"), shortHash("a"));
+assert.notEqual(shortHash("a"), shortHash("b"));
 
 console.log("Todos los tests de lib.js han pasado correctamente.");
