@@ -122,6 +122,62 @@ function looksShiny(text) {
   return /\bshiny\b/i.test(text) ? "possible" : "desconocido";
 }
 
+/** Busca el dexNumber de una especie a partir de su nombre en inglés (tal
+ * cual aparece en el título de Serebii), reusando la misma lista ordenada
+ * de más largo a más corto que findDexNumbers para no confundir nombres
+ * parecidos (p. ej. "Iron Valiant" con "Valiant"). */
+function findSpeciesDex(nameEn, speciesEntries) {
+  const target = nameEn.trim().toLowerCase();
+  for (const [dex, name] of speciesEntries) {
+    const n = name.toLowerCase();
+    if (target === n || target.startsWith(n)) return Number(dex);
+  }
+  return null;
+}
+
+// Conjunción "y"/"e" en español: se usa "e" delante de palabras que
+// empiezan por sonido "i" (i-, hi- pero no hie-), para no decir "Farigiraf
+// y Iron Valiant" en vez de "Farigiraf e Iron Valiant".
+function andWord(nextWord) {
+  return /^(i|hi(?!e))/i.test(nextWord || "") ? "e" : "y";
+}
+
+/** Traduce el título de un evento a los términos oficiales en español,
+ * SOLO para los dos patrones que sabemos con certeza cómo se llaman en el
+ * juego localizado: los Tera Raid Battle "Mighty <Pokémon>" (in-game:
+ * "<Pokémon> el Imbatible") y los eventos "Shiny <Pokémon>"/"<Pokémon>
+ * Appears" (in-game: "<Pokémon> variocolor"). El resto de títulos son
+ * descripciones propias de Serebii sin traducción oficial conocida, así
+ * que se dejan en inglés antes que inventarnos una traducción. Devuelve
+ * null si no aplica ningún patrón conocido. */
+function translateTitle(title, speciesEntries, speciesNames) {
+  const esName = (nameEn) => {
+    const dex = findSpeciesDex(nameEn, speciesEntries);
+    return dex != null ? speciesNames.es[String(dex)] || nameEn : nameEn;
+  };
+
+  // "Mighty X & Mighty Y" (eventos con dos jefes de teraincursión a la vez).
+  const doubleMighty = title.match(/^Mighty\s+(.+?)\s*&\s*Mighty\s+(.+)$/i);
+  if (doubleMighty) {
+    const a = esName(doubleMighty[1]);
+    const b = esName(doubleMighty[2]);
+    return `${a} ${andWord(b)} ${b}, los Imbatibles`;
+  }
+
+  const mighty = title.match(/^Mighty\s+(.+)$/i);
+  if (mighty) {
+    return `${esName(mighty[1])} el Imbatible`;
+  }
+
+  // "Shiny X", "Shiny X Appears", "Shiny X Returns"...
+  const shiny = title.match(/^Shiny\s+(.+?)(\s+(Appears|Returns))?$/i);
+  if (shiny) {
+    return `${esName(shiny[1])} variocolor`;
+  }
+
+  return null;
+}
+
 /** Estructura real confirmada en Serebii (comprobada con HTML en vivo, no
  * adivinada): cada evento vive en una tabla `table.tab` como dos filas
  * separadas —
@@ -177,11 +233,14 @@ export function parseEventsFromHtml(html, { game, generation, sourceUrl, species
             .join(", ") + (dexNumbers.length > 6 ? ` y ${dexNumbers.length - 6} más` : "")
         : null;
 
+    const titleEs = translateTitle(title, speciesEntries, speciesNames);
+
     seen.set(id, {
       id,
       game,
       generation,
       title,
+      titleEs,
       dateStart,
       dateEnd,
       dateRaw,

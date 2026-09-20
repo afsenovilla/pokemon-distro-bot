@@ -62,6 +62,7 @@ assert.ok(finale.dexNumbers.includes(143)); // Snorlax
 assert.equal(finale.shiny, "possible");
 assert.equal(finale.generation, 8);
 assert.equal(finale.game, "Espada/Escudo");
+assert.equal(finale.titleEs, null); // "Finale" no sigue ningún patrón oficial conocido -> se deja en inglés
 
 const glastrier = events.find((e) => e.title.includes("Glastrier"));
 assert.ok(glastrier, "debería encontrar el evento de Glastrier/Spectrier");
@@ -115,11 +116,52 @@ assert.equal(kingambit.dateStart, "2026-08-28");
 assert.equal(kingambit.dateEnd, "2026-09-03");
 assert.equal(kingambit.shiny, "possible");
 assert.ok(kingambit.dexNumbers.includes(983)); // Kingambit
+assert.equal(kingambit.titleEs, "Kingambit el Imbatible");
 
 const farigiraf = svEvents.find((e) => e.title === "Mighty Farigiraf");
 assert.ok(farigiraf, "debería encontrar 'Mighty Farigiraf' con su propio título, no el de Kingambit");
 assert.equal(farigiraf.dateStart, "2026-08-21");
 assert.equal(farigiraf.dateEnd, "2026-08-27");
+assert.equal(farigiraf.titleEs, "Farigiraf el Imbatible");
+
+// "Mighty X & Mighty Y" (dos jefes a la vez, nombres que SÍ cambian del
+// inglés al español: Torterra/Infernape se quedan igual pero sirven para
+// probar la "e" en vez de "y" delante de "Infernape") y "Shiny X".
+const doubleAndShinyHtml = `
+<table class="tab" align="center">
+<tr>
+  <td class="fooleft" colspan="2"><h2>Mighty Torterra &amp; Mighty Infernape</h2></td>
+</tr>
+<tr>
+  <td class="foocontent" valign="top">
+    <b>Global:</b> October 3rd 2025 - October 12th 2025<br />
+    <p>The eighty-fourth Tera Raid Battle event.</p>
+  </td>
+</tr>
+<tr>
+  <td class="fooleft" colspan="2"><h2>Shiny Chi-Yu</h2></td>
+</tr>
+<tr>
+  <td class="foocontent" valign="top">
+    <b>Global:</b> September 1st 2025 - September 13th 2025<br />
+    <p>The eighty-third Tera Raid Battle event.</p>
+  </td>
+</tr>
+</table>
+`;
+const doubleAndShinyEvents = parseEventsFromHtml(doubleAndShinyHtml, {
+  game: "Escarlata/Púrpura",
+  generation: 9,
+  sourceUrl: "https://www.serebii.net/scarletviolet/teraraidbattleevents.shtml",
+  speciesNames,
+});
+const torterra = doubleAndShinyEvents.find((e) => e.title.includes("Torterra"));
+assert.ok(torterra);
+assert.equal(torterra.titleEs, "Torterra e Infernape, los Imbatibles");
+
+const chiYu = doubleAndShinyEvents.find((e) => e.title === "Shiny Chi-Yu");
+assert.ok(chiYu);
+assert.equal(chiYu.titleEs, "Chi-Yu variocolor");
 
 // Un td.foocontent sin ningún <h2> previo (título ausente) se ignora sin
 // romper el parseo.
