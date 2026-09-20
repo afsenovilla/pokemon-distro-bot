@@ -229,6 +229,11 @@ async function main() {
   for (const page of SOURCE_PAGES) {
     try {
       const html = await fetchHtml(page.url);
+      console.log(
+        `[debug] ${page.url}: ${html.length} bytes recibidos. Primeros 300 caracteres:\n${html
+          .replace(/\s+/g, " ")
+          .slice(0, 300)}`
+      );
       const events = parseEventsFromHtml(html, { ...page, sourceUrl: page.url, speciesNames, debug: true });
       all.push(...events);
       console.log(`OK  ${page.game}: ${events.length} eventos`);
