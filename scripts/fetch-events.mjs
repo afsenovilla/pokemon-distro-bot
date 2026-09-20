@@ -43,11 +43,15 @@ export const SOURCE_PAGES = [
 const MONTHS_EN = {
   january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
   july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
+  // Erratas reales vistas en Serebii (p. ej. "Janaury 5th 2025" en la
+  // página de Escarlata/Púrpura): si no las reconocemos, esa fecha de fin
+  // se pierde y el evento parece "activo para siempre".
+  janaury: 1,
 };
 
 // "August 28th 2026", "September 1st, 2025", "March 12 2023"...
 const DATE_RE =
-  /(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2})(?:st|nd|rd|th)?,?\s*(\d{4})?/gi;
+  /(January|Janaury|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2})(?:st|nd|rd|th)?,?\s*(\d{4})?/gi;
 
 function normalize(str) {
   return (str || "")
@@ -81,8 +85,17 @@ function toIso(month, day, year) {
 
 /** A partir del texto de un bloque, saca fecha de inicio/fin. Si el primer
  * match no tiene año (rango tipo "February 27th - March 12th 2023"), coge
- * el año del siguiente match que sí lo tenga. Un final tipo "End of
- * Service"/"End-of-life" se trata como "sigue abierto" (dateEnd null). */
+ * el año del siguiente match que sí lo tenga.
+ *
+ * OJO: a diferencia de las distribuciones Mystery Gift (donde "sin fecha
+ * de fin" suele significar de verdad "sigue disponible indefinidamente"),
+ * estos eventos in-game (raids, Wild Area News, etc.) SIEMPRE tienen una
+ * ventana acotada — si Serebii no da una segunda fecha es porque el evento
+ * duró un solo día, o porque "End of Service" señala que aquello se acabó
+ * cuando cerró el servicio online correspondiente (hace años, a estas
+ * alturas). Así que si no encontramos una fecha de fin explícita,
+ * asumimos que dateEnd = dateStart (un solo día) en vez de dejarlo en
+ * null, que computeStatus() interpretaría como "activo para siempre". */
 function extractDateRange(text) {
   const matches = extractDateMatches(text);
   if (matches.length === 0) return { dateStart: null, dateEnd: null, dateRaw: null };
@@ -91,11 +104,10 @@ function extractDateRange(text) {
   const start = matches[0];
   const startIso = toIso(start.month, start.day, start.year || fallbackYear);
 
-  const ongoing = /end[\s-]of[\s-](service|life)/i.test(text);
-  let endIso = null;
-  if (!ongoing && matches.length > 1) {
+  let endIso = startIso;
+  if (matches.length > 1) {
     const end = matches[1];
-    endIso = toIso(end.month, end.day, end.year || fallbackYear);
+    endIso = toIso(end.month, end.day, end.year || fallbackYear) || startIso;
   }
 
   // dateRaw: el fragmento de texto alrededor de la primera fecha, para que

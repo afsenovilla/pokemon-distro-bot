@@ -57,7 +57,7 @@ assert.equal(events.length, 2);
 const finale = events.find((e) => e.title === "Finale");
 assert.ok(finale, "debería encontrar el evento 'Finale'");
 assert.equal(finale.dateStart, "2022-11-01");
-assert.equal(finale.dateEnd, null); // "End of Service" -> sigue abierto
+assert.equal(finale.dateEnd, "2022-11-01"); // "End of Service" sin segunda fecha -> se trata como un solo día, no "activo para siempre"
 assert.ok(finale.dexNumbers.includes(143)); // Snorlax
 assert.equal(finale.shiny, "possible");
 assert.equal(finale.generation, 8);
@@ -170,6 +170,29 @@ const noTitleEvents = parseEventsFromHtml(
   { game: "Test", generation: 8, sourceUrl: "https://example.com", speciesNames }
 );
 assert.equal(noTitleEvents.length, 0);
+
+// Bug real encontrado en producción: un evento con una sola fecha (sin
+// rango) se guardaba con dateEnd=null, que computeStatus() interpreta como
+// "activo para siempre" -> eventos de 2021/2022 salían como activos hoy.
+// Debe quedar dateEnd = dateStart (un solo día).
+const singleDateEvents = parseEventsFromHtml(
+  `<table class="tab"><tr><td class="fooleft"><h2>Sudowoodo Event</h2></td></tr>
+   <tr><td class="foocontent">Global: April 1st 2022. Un evento de un solo día.</td></tr></table>`,
+  { game: "Espada/Escudo", generation: 8, sourceUrl: "https://example.com", speciesNames }
+);
+assert.equal(singleDateEvents[0].dateStart, "2022-04-01");
+assert.equal(singleDateEvents[0].dateEnd, "2022-04-01");
+
+// Otro bug real: "Janaury" (errata real de Serebii en vez de "January") no
+// se reconocía como mes, así que la fecha de fin se perdía y el evento
+// también quedaba "activo para siempre".
+const typoEvents = parseEventsFromHtml(
+  `<table class="tab"><tr><td class="fooleft"><h2>Shiny Rayquaza Appears</h2></td></tr>
+   <tr><td class="foocontent">Global: December 20th 2024 - Janaury 5th 2025. Typo real de Serebii.</td></tr></table>`,
+  { game: "Escarlata/Púrpura", generation: 9, sourceUrl: "https://example.com", speciesNames }
+);
+assert.equal(typoEvents[0].dateStart, "2024-12-20");
+assert.equal(typoEvents[0].dateEnd, "2025-01-05");
 
 // Sin tabla "table.tab" en absoluto: no debe encontrar nada ni petar.
 const emptyEvents = parseEventsFromHtml("<p>Texto sin ninguna fecha aquí.</p>", {
