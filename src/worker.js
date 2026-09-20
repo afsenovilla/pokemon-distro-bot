@@ -14,19 +14,25 @@ const KV_KEY_GALLERY = "eventsgallery"; // data/eventsgallery.json (historial co
 
 const EVENTSGALLERY_RAW_BASE = "https://raw.githubusercontent.com/projectpokemon/EventsGallery/master/";
 
-const HELP_TEXT = `<b>Pokémon Distribuciones Bot</b>
+function buildHelpText(env, chatId) {
+  const owner = env.OWNER_CHAT_ID;
+  const isOwner = !owner || String(chatId) === String(owner);
+  const faltanLine = isOwner
+    ? "\n• /faltan — cruce con la Living Dex de Poketracker: qué se queda atrapado si no se mueve a HOME a tiempo, y qué shiny garantizados faltan por conseguir"
+    : "";
+  return `<b>Pokémon Distribuciones Bot</b>
 Te digo en qué juegos se ha distribuido un Pokémon a lo largo de TODA la historia de Mystery Gift, si era shiny (comprobado leyendo la wondercard real, no adivinado), y te dejo descargarte esa wondercard. También sé qué distribuciones del juego actual están activas o anunciadas.
 
 <b>Comandos</b>
-• Escribe el nombre de un Pokémon (o usa /pokemon nombre) — p. ej. <code>mew</code> (cada resultado indica si puede llegar a Pokémon HOME o si depende de Pokémon Bank)
-• /wondercard &lt;id&gt; — descarga el archivo real de una distribución (el id sale debajo de cada resultado)
-• /home — recordatorio del cierre de Pokémon Bank y qué juegos se ven afectados
-• /activas — distribuciones del juego actual activas ahora
-• /proximas — distribuciones del juego actual anunciadas que aún no han empezado
-• /faltan — cruce con la Living Dex de Poketracker: qué se queda atrapado si no se mueve a HOME a tiempo, y qué shiny garantizados faltan por conseguir
-• /ayuda — este mensaje
+- Escribe el nombre de un Pokémon (o usa /pokemon nombre) — p. ej. <code>mew</code> (cada resultado indica si puede llegar a Pokémon HOME o si depende de Pokémon Bank)
+- /wondercard &lt;id&gt; — descarga el archivo real de una distribución (el id sale debajo de cada resultado)
+- /home — recordatorio del cierre de Pokémon Bank y qué juegos se ven afectados
+- /activas — distribuciones del juego actual activas ahora
+- /proximas — distribuciones del juego actual anunciadas que aún no han empezado${faltanLine}
+- /ayuda — este mensaje
 
 Fuente del historial: <a href="https://github.com/projectpokemon/EventsGallery">projectpokemon/EventsGallery</a> (el mismo archivo que usa PKHeX para legalidad), actualizado cada semana.`;
+}
 
 async function telegramApi(env, method, payload) {
   const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/${method}`, {
@@ -125,6 +131,8 @@ async function isRateLimited(env, chatId) {
   const current = await env.DISTRO_KV.get(key);
   const count = current ? Number(current) : 0;
   if (count >= 8) return true;
+  // El TTL mínimo permitido por Cloudflare KV es 60s, aunque la ventana de
+  // rate-limit que queremos aplicar es de 20s (8 mensajes / 20s).
   await env.DISTRO_KV.put(key, String(count + 1), { expirationTtl: 60 });
   return false;
 }
@@ -242,6 +250,11 @@ Busca un Pokémon (p. ej. <code>mew</code>) y cada distribución te dirá su cas
 }
 
 async function handleFaltan(env, chatId) {
+  const owner = env.OWNER_CHAT_ID;
+  if (owner && String(chatId) !== String(owner)) {
+    await sendMessage(env, chatId, "Este comando no está disponible.");
+    return;
+  }
   const repo = env.POKETRACKER_REPO;
   if (!repo) {
     await sendMessage(env, chatId, "El cruce con Poketracker no está configurado en este bot.");
@@ -310,7 +323,7 @@ async function handleUpdate(env, update) {
       case "start":
       case "ayuda":
       case "help":
-        await sendMessage(env, chatId, HELP_TEXT);
+        await sendMessage(env, chatId, buildHelpText(env, chatId));
         return;
       case "activas":
         await handleActivas(env, chatId);
