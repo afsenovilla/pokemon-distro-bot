@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-02T13:01:06.367Z",
+  "generatedAt": "2026-11-09T13:33:38.429Z",
   "source": "https://github.com/projectpokemon/EventsGallery",
-  "filesScanned": 7676,
+  "filesScanned": 7695,
   "skippedNonPokemon": 309,
   "skippedNoSpeciesMatch": 1689,
-  "totalDistributions": 1827,
+  "totalDistributions": 1829,
   "entries": [
     {
       "id": "absol-gen3-rubi-zafiro-esmeralda-rojo-fuego-verde-hoja-never-top-20",
@@ -1396,7 +1396,7 @@
       "shiny": "desconocido",
       "shinyLabel": "desconocido",
       "shinySource": "nombre-de-archivo",
-      "variantCount": 1,
+      "variantCount": 2,
       "representativeFile": "Gen 9/ZA/Wondercards/0101 ZA - PokéCenter Audino.wa9",
       "ext": "wa9"
     },
@@ -6853,7 +6853,7 @@
       "shiny": "never",
       "shinyLabel": "nunca",
       "shinySource": "wondercard",
-      "variantCount": 1,
+      "variantCount": 2,
       "representativeFile": "Gen 9/SV/Wondercards/0070 SV - PokéCenter Fidough.wc9",
       "ext": "wc9"
     },
@@ -25966,6 +25966,23 @@
       "ext": "wc7full"
     },
     {
+      "id": "spewpa-gen9-legends-z-a-never-trainer-spewpa-archipelago-pattern",
+      "species": "Spewpa",
+      "speciesEs": "Spewpa",
+      "dexNumber": 665,
+      "generation": 9,
+      "game": "Legends: Z-A",
+      "gameCode": "ZA",
+      "event": "(Trainer) Spewpa (Archipelago Pattern)",
+      "region": null,
+      "shiny": "never",
+      "shinyLabel": "nunca",
+      "shinySource": "wondercard",
+      "variantCount": 16,
+      "representativeFile": "Gen 9/ZA/Wondercards/1615 ZA - (Trainer) Spewpa (Archipelago Pattern).wa9",
+      "ext": "wa9"
+    },
+    {
       "id": "spinda-gen3-rubi-zafiro-never-ds-download-play",
       "species": "Spinda",
       "speciesEs": "Spinda",
@@ -28599,6 +28616,23 @@
       "variantCount": 2,
       "representativeFile": "Gen 6/Wondercards/SPA/0511 XY - VERANO 2014 (8064) Poké Ball Vivillon (SPA).wc6",
       "ext": "wc6"
+    },
+    {
+      "id": "vivillon-gen9-legends-z-a-desconocido-kalos-vivillon-poke-ball-pattern",
+      "species": "Vivillon",
+      "speciesEs": "Vivillon",
+      "dexNumber": 666,
+      "generation": 9,
+      "game": "Legends: Z-A",
+      "gameCode": "ZA",
+      "event": "Kalos Vivillon (Poké Ball Pattern)",
+      "region": null,
+      "shiny": "desconocido",
+      "shinyLabel": "desconocido",
+      "shinySource": "nombre-de-archivo",
+      "variantCount": 1,
+      "representativeFile": "Gen 9/ZA/Wondercards/1616 ZA - Kalos Vivillon (Poké Ball Pattern).wa9",
+      "ext": "wa9"
     },
     {
       "id": "volcanion-gen6-x-y-rubi-omega-zafiro-alfa-never-nebel-volcanion-eng",
