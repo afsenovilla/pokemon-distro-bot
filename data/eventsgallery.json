@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-09T13:33:38.429Z",
+  "generatedAt": "2026-11-16T13:18:44.830Z",
   "source": "https://github.com/projectpokemon/EventsGallery",
-  "filesScanned": 7695,
+  "filesScanned": 7697,
   "skippedNonPokemon": 309,
   "skippedNoSpeciesMatch": 1689,
-  "totalDistributions": 1829,
+  "totalDistributions": 1831,
   "entries": [
     {
       "id": "absol-gen3-rubi-zafiro-esmeralda-rojo-fuego-verde-hoja-never-top-20",
@@ -2504,6 +2504,23 @@
       "variantCount": 6,
       "representativeFile": "Gen 7/3DS/Wondercards/FRE/0630 SMUSUM - Ilex Celebi (EU) (FRE).wc7full",
       "ext": "wc7full"
+    },
+    {
+      "id": "celebi-gen8-espada-escudo-never-home-simulated-wcs",
+      "species": "Celebi",
+      "speciesEs": "Celebi",
+      "dexNumber": 251,
+      "generation": 8,
+      "game": "Espada/Escudo",
+      "gameCode": "SWSH",
+      "event": "HOME Simulated WCs",
+      "region": null,
+      "shiny": "never",
+      "shinyLabel": "nunca",
+      "shinySource": "wondercard",
+      "variantCount": 1,
+      "representativeFile": "Gen 8/HOME Simulated WCs/9036 SWSH - Simulated HOME Celebi.wc8",
+      "ext": "wc8"
     },
     {
       "id": "celebi-gen8-espada-escudo-always-jungle-shiny-celebi-japanese-release",
@@ -29704,6 +29721,23 @@
       "variantCount": 1,
       "representativeFile": "Gen 7/3DS/Wondercards/SPA/0650 UM - Leyendas2018 Xerneas (SPA).wc7full",
       "ext": "wc7full"
+    },
+    {
+      "id": "xerneas-gen9-legends-z-a-always-kalos-shiny-xerneas",
+      "species": "Xerneas",
+      "speciesEs": "Xerneas",
+      "dexNumber": 716,
+      "generation": 9,
+      "game": "Legends: Z-A",
+      "gameCode": "ZA",
+      "event": "Kalos Shiny Xerneas",
+      "region": null,
+      "shiny": "always",
+      "shinyLabel": "siempre",
+      "shinySource": "nombre-de-archivo",
+      "variantCount": 1,
+      "representativeFile": "Gen 9/ZA/Wondercards/1613 ZA - Kalos Shiny Xerneas.wa9",
+      "ext": "wa9"
     },
     {
       "id": "yanma-gen4-diamante-perla-never-hayley-yanma-eng",
